@@ -34,6 +34,8 @@ dfModified['checkpoint_order'][14] = 14 # last checkpoint ID is 99 on the databa
 # line plot; X: CP number; Y: time passed
 fig, ax = plt.subplots()
 ax.plot(dfModified['checkpoint_order'], dfModified['CPTimeSeconds'])
+ax.set_xlabel('número do CP')
+ax.set_ylabel('tempo passado')
 plt.plot()
 
 # preparing data to calculate linear regression
@@ -48,4 +50,6 @@ regression_line = [(m*x)+b for x in Xdist]
 fig, ax = plt.subplots()
 ax.scatter(Xdist, Ytime)
 ax.plot(Xdist, regression_line, color="red")
+ax.set_xlabel('distância percorrida')
+ax.set_ylabel('tempo passado')
 plt.show()
