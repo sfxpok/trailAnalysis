@@ -1,28 +1,66 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cbook as cbook
+import pandas as pd
+from sklearn import datasets, linear_model
 
-# Load a numpy record array from yahoo csv data with fields date, open, close,
-# volume, adj_close from the mpl-data/example directory. The record array
-# stores the date as an np.datetime64 with a day unit ('D') in the date column.
-with cbook.get_sample_data('goog.npz') as datafile:
-    price_data = np.load(datafile)['price_data'].view(np.recarray)
-price_data = price_data[-250:]  # get the most recent 250 trading days
+# time must be in seconds
+# distance must be in meters
 
-delta1 = np.diff(price_data.adj_close) / price_data.adj_close[:-1]
+### inserting/cleaning/converting data ###
 
-# Marker size in units of points^2
-volume = (15 * price_data.volume[:-2] / price_data.volume[0])**2
-close = 0.003 * price_data.close[:-2] / 0.003 * price_data.open[:-2]
+#athleteData = np.genfromtxt('andris_disttime.csv', names=True, dtype=None, delimiter=',')
+# athleteData[0][4][11:] <--- DATETIME COLUMN WITH TIME ONLY
+
+df = pd.read_csv('andris_disttime.csv')
+
+#cptimeSeconds = df.CPTime.str[11:]
+
+CPTimeInt64 = pd.DatetimeIndex(df['CPTime']) # dtype conversion
+CPTimeSeconds = CPTimeInt64.hour * 3600 + CPTimeInt64.minute * 60 + CPTimeInt64.second # hhmmss to seconds
+
+dfModified = df
+dfModified['CPTimeSeconds'] = CPTimeSeconds
+dfModified['checkpoint_order'][14] = 14 # last checkpoint ID is 99 on the database
+
+##########################################
+
+### plotting data ###
 
 fig, ax = plt.subplots()
-ax.scatter(delta1[:-1], delta1[1:], c=close, s=volume, alpha=0.5)
+ax.plot(dfModified['checkpoint_order'], dfModified['CPTimeSeconds'])
+plt.plot() # displays plot
 
-ax.set_xlabel(r'$\Delta_i$', fontsize=15)
-ax.set_ylabel(r'$\Delta_{i+1}$', fontsize=15)
-ax.set_title('Volume and percent change')
+#####################
 
-ax.grid(True)
-fig.tight_layout()
+### Linear Regression. ###
 
+from statistics import mean
+
+def best_fit_slope_and_intercept(xs,ys):
+    m = (((mean(xs)*mean(ys)) - mean(xs*ys)) /
+         ((mean(xs)*mean(xs)) - mean(xs*xs)))
+    
+    b = mean(ys) - m*mean(xs)
+    
+    return m, b
+
+##########################
+
+### Linear Regression. X is traveled distance, Y is time ###
+
+Xdist = dfModified['distancia_acumulada']
+Ytime = dfModified['CPTimeSeconds']
+m, b = best_fit_slope_and_intercept(Xdist, Ytime)
+
+regression_line = [] # clean array, this is important
+regression_line = [(m*x)+b for x in Xdist]
+
+### scatterplot ###
+
+fig, ax = plt.subplots()
+ax.scatter(Xdist, Ytime)
+ax.plot(Xdist, regression_line)
 plt.show()
+
+###################
