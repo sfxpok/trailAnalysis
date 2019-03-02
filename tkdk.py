@@ -28,24 +28,39 @@ df = pd.read_csv('MIUT2014-2018_temposEdistancias.csv') # read CSV file
 
 #cptimeSeconds = df.CPTime.str[11:]
 
-CPTimeInt64 = pd.DatetimeIndex(df['CPTime']) # datatype conversion
-CPTimeSeconds = CPTimeInt64.hour * 3600 + CPTimeInt64.minute * 60 + CPTimeInt64.second # hhmmss to seconds
+#CPTimeInt64 = pd.DatetimeIndex(df['CPTime']) # datatype conversion
+#CPTimeSeconds = CPTimeInt64.hour * 3600 + CPTimeInt64.minute * 60 + CPTimeInt64.second # hhmmss to seconds
 
-dfModified = df # keeping original data intact
-dfModified['CPTimeSeconds'] = CPTimeSeconds
+#dfModified = df # keeping original data intact
+#dfModified['CPTimeSeconds'] = CPTimeSeconds
 # dfModified['checkpoint_order'][14] = 14 # last checkpoint ID is 99 on the database
 
-for athlete in fetchAthleteIDs:
+for athlete in fetchAthleteIDs: # athletes over 24h on the competitive will have bad results @ see CPTimeSeconds
     
-    tempAthleteData = dfModified[dfModified['inscription_athlete_athlete_id'] == int(athlete)]
+    tempAthleteData = df[df['inscription_athlete_athlete_id'] == int(athlete)]
     tempAthleteData.iloc[14, tempAthleteData.columns.get_loc('checkpoint_order')] = 14
 
+    CPTimeInt64 = pd.DatetimeIndex(tempAthleteData['CPTime']) # datatype conversion
+
+    startTime = CPTimeInt64[0]
+    startTimeToMidnightInSeconds = 60*60*(24-startTime.hour)
+
+    CPTimeSeconds = []
+
+    for i in CPTimeInt64:
+        if CPTimeInt64.day[i] != CPTimeInt64.day[i+1]:
+            CPTimeSeconds[i] = CPTimeInt64.hour[i] * 3600 + CPTimeInt64.minute[i] * 60 + CPTimeInt64.second[i] + 100000 # hhmmss to seconds
+        else:
+            CPTimeSeconds[i] = CPTimeInt64.hour[i] * 3600 + CPTimeInt64.minute[i] * 60 + CPTimeInt64.second[i]
+
+    tempAthleteData['CPTimeSeconds'] = CPTimeSeconds
+
     # line plot; X: CP number; Y: time passed
-    fig, ax = plt.subplots()
-    ax.plot(tempAthleteData['checkpoint_order'], tempAthleteData['CPTimeSeconds'])
-    ax.set_xlabel('número do CP')
-    ax.set_ylabel('tempo passado')
-    plt.savefig(athlete + '_xCPnum_yTime')
+    #fig, ax = plt.subplots()
+    #ax.plot(tempAthleteData['checkpoint_order'], tempAthleteData['CPTimeSeconds'])
+    #ax.set_xlabel('número do CP')
+    #ax.set_ylabel('tempo passado')
+    #plt.savefig(athlete + '_xCPnum_yTime')
     #plt.plot()
 
     # preparing data to calculate linear regression
