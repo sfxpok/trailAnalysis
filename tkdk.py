@@ -20,7 +20,11 @@ def best_fit_slope_and_intercept(xs,ys):
 #athleteData = np.genfromtxt('andris_disttime.csv', names=True, dtype=None, delimiter=',')
 #athleteData[0][4][11:] <--- DATETIME COLUMN WITH TIME ONLY
 
-df = pd.read_csv('andris_disttime.csv') # read CSV file
+fetchAthleteIDs = input('Insire IDs dos atletas: ') # example: 115321, 123812, 251180
+fetchAthleteIDs = fetchAthleteIDs.split(",")
+fetchAthleteIDs = [x.strip(' ') for x in fetchAthleteIDs] # making sure there are no spaces
+
+df = pd.read_csv('MIUT2014-2018_temposEdistancias.csv') # read CSV file
 
 #cptimeSeconds = df.CPTime.str[11:]
 
@@ -29,27 +33,35 @@ CPTimeSeconds = CPTimeInt64.hour * 3600 + CPTimeInt64.minute * 60 + CPTimeInt64.
 
 dfModified = df # keeping original data intact
 dfModified['CPTimeSeconds'] = CPTimeSeconds
-dfModified['checkpoint_order'][14] = 14 # last checkpoint ID is 99 on the database
+# dfModified['checkpoint_order'][14] = 14 # last checkpoint ID is 99 on the database
 
-# line plot; X: CP number; Y: time passed
-fig, ax = plt.subplots()
-ax.plot(dfModified['checkpoint_order'], dfModified['CPTimeSeconds'])
-ax.set_xlabel('número do CP')
-ax.set_ylabel('tempo passado')
-plt.plot()
+for athlete in fetchAthleteIDs:
+    
+    tempAthleteData = dfModified[dfModified['inscription_athlete_athlete_id'] == int(athlete)]
+    tempAthleteData.iloc[14, tempAthleteData.columns.get_loc('checkpoint_order')] = 14
 
-# preparing data to calculate linear regression
-Xdist = dfModified['distancia_acumulada']
-Ytime = dfModified['CPTimeSeconds']
-m, b = best_fit_slope_and_intercept(Xdist, Ytime)
+    # line plot; X: CP number; Y: time passed
+    fig, ax = plt.subplots()
+    ax.plot(tempAthleteData['checkpoint_order'], tempAthleteData['CPTimeSeconds'])
+    ax.set_xlabel('número do CP')
+    ax.set_ylabel('tempo passado')
+    plt.savefig(athlete + '_xCPnum_yTime')
+    #plt.plot()
 
-regression_line = [] # clean array, this is important
-regression_line = [(m*x)+b for x in Xdist]
+    # preparing data to calculate linear regression
+    Xdist = tempAthleteData['distancia_acumulada']
+    Ytime = tempAthleteData['CPTimeSeconds']
+    m, b = best_fit_slope_and_intercept(Xdist, Ytime)
 
-# scatter plot; X: distance traveled; Y: time passed
-fig, ax = plt.subplots()
-ax.scatter(Xdist, Ytime)
-ax.plot(Xdist, regression_line, color="red")
-ax.set_xlabel('distância percorrida')
-ax.set_ylabel('tempo passado')
-plt.show()
+    regression_line = [] # clean array, this is important
+    regression_line = [(m*x)+b for x in Xdist]
+
+    # scatter plot; X: distance traveled; Y: time passed
+    fig, ax = plt.subplots()
+    ax.scatter(Xdist, Ytime)
+    ax.plot(Xdist, regression_line, color="red")
+    ax.set_xlabel('distância percorrida')
+    ax.set_ylabel('tempo passado')
+    plt.savefig(athlete + '_xDistance_yTime')
+
+    #plt.show()
