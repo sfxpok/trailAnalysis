@@ -35,33 +35,30 @@ def convertTimeToSeconds(checkPointTime):
 
     return CPTimeSeconds
 
-
-#athleteData = np.genfromtxt('andris_disttime.csv', names=True, dtype=None, delimiter=',')
-#athleteData[0][4][11:] <--- DATETIME COLUMN WITH TIME ONLY
-
 fetchAthleteIDs = input('Insire IDs dos atletas: ') # example: 115321, 123812, 251180
 fetchAthleteIDs = fetchAthleteIDs.split(",")
 fetchAthleteIDs = [x.strip(' ') for x in fetchAthleteIDs] # making sure there are no spaces
 
+# MIUT2018 athlete IDs
+# first 9 athletes
+#fetchAthleteIDs = "116854,114564,115470,116624,115314,116859,116850,114977,115030"
+# last 9 athletes
+#fetchAthleteIDs = "114356,115780,114905,115542,115017,116825,115026,116419,115335"
+# random 9 athletes
+#fetchAthleteIDs = "115366,116078,116300,115656,114751,115403,114628,115201,116232"
+
 df = pd.read_csv('MIUT2014-2018_temposEdistancias.csv') # read CSV file
-
-#cptimeSeconds = df.CPTime.str[11:]
-
-#CPTimeInt64 = pd.DatetimeIndex(df['CPTime']) # datatype conversion
-#CPTimeSeconds = CPTimeInt64.hour * 3600 + CPTimeInt64.minute * 60 + CPTimeInt64.second # hhmmss to seconds
-
-#dfModified = df # keeping original data intact
-#dfModified['CPTimeSeconds'] = CPTimeSeconds
-# dfModified['checkpoint_order'][14] = 14 # last checkpoint ID is 99 on the database
 
 for athlete in fetchAthleteIDs: # athletes over 24h on the competitive will have bad results @ see CPTimeSeconds
     
+    print("### Processing athlete number: " + athlete + " ###")
+
+    # NOTA: Podem haver atletas que não foram registados em alguns CPs
+
     tempAthleteData = df[df['inscription_athlete_athlete_id'] == int(athlete)]
-    tempAthleteData.iloc[14, tempAthleteData.columns.get_loc('checkpoint_order')] = 14
+    tempAthleteData.iloc[-1, tempAthleteData.columns.get_loc('checkpoint_order')] = 14
 
     CPTimeInt64 = pd.DatetimeIndex(tempAthleteData['CPTime']) # datatype conversion
-
-    #convertTimeToSeconds(CPTimeInt64)
 
     tempAthleteData['CPTimeSeconds'] = convertTimeToSeconds(CPTimeInt64)
 
