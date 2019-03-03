@@ -17,6 +17,25 @@ def best_fit_slope_and_intercept(xs,ys):
     
     return m, b
 
+# convert hh:mm:ss to seconds
+
+def convertTimeToSeconds(checkPointTime):
+    startTime = CPTimeInt64.hour[0]
+    startTimeToMidnightInSeconds = 60*60*(24-startTime)
+
+    startDay = CPTimeInt64.day[0]
+
+    CPTimeSeconds = []
+
+    for i in range(len(CPTimeInt64.day)):
+        if (i > 0 and i < len(CPTimeInt64.day)) and (CPTimeInt64.day[i] != startDay):
+            CPTimeSeconds.append(CPTimeInt64.hour[i] * 3600 + CPTimeInt64.minute[i] * 60 + CPTimeInt64.second[i] + startTimeToMidnightInSeconds) # hhmmss to seconds
+        else:
+            CPTimeSeconds.append(CPTimeInt64.hour[i] * 3600 + CPTimeInt64.minute[i] * 60 + CPTimeInt64.second[i])
+
+    return CPTimeSeconds
+
+
 #athleteData = np.genfromtxt('andris_disttime.csv', names=True, dtype=None, delimiter=',')
 #athleteData[0][4][11:] <--- DATETIME COLUMN WITH TIME ONLY
 
@@ -42,18 +61,9 @@ for athlete in fetchAthleteIDs: # athletes over 24h on the competitive will have
 
     CPTimeInt64 = pd.DatetimeIndex(tempAthleteData['CPTime']) # datatype conversion
 
-    startTime = CPTimeInt64[0]
-    startTimeToMidnightInSeconds = 60*60*(24-startTime.hour)
+    #convertTimeToSeconds(CPTimeInt64)
 
-    CPTimeSeconds = []
-
-    for i in CPTimeInt64:
-        if CPTimeInt64.day[i] != CPTimeInt64.day[i+1]:
-            CPTimeSeconds[i] = CPTimeInt64.hour[i] * 3600 + CPTimeInt64.minute[i] * 60 + CPTimeInt64.second[i] + 100000 # hhmmss to seconds
-        else:
-            CPTimeSeconds[i] = CPTimeInt64.hour[i] * 3600 + CPTimeInt64.minute[i] * 60 + CPTimeInt64.second[i]
-
-    tempAthleteData['CPTimeSeconds'] = CPTimeSeconds
+    tempAthleteData['CPTimeSeconds'] = convertTimeToSeconds(CPTimeInt64)
 
     # line plot; X: CP number; Y: time passed
     #fig, ax = plt.subplots()
