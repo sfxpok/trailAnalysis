@@ -1,8 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+import sys
+import random
 from sklearn import datasets, linear_model
 from statistics import mean
+
+filterArg = sys.argv[1]
+quantityArg = sys.argv[2]
 
 # time must be in seconds
 # distance must be in meters
@@ -34,6 +39,23 @@ def convertTimeToSeconds(checkPointTime):
             CPTimeSeconds.append(CPTimeInt64.hour[i] * 3600 + CPTimeInt64.minute[i] * 60 + CPTimeInt64.second[i])
 
     return CPTimeSeconds
+
+def getFilter(dataSet = filterArg, numberOfAthletes = quantityArg):
+    # import every athlete from a competition to a dataframe
+
+    df = pd.read_csv('MIUT2014-2018_temposEdistancias.csv') # read CSV file
+    athleteIDs = df['inscription_athlete_athlete_id'].unique()
+
+    if (dataSet == "f"): # first X
+        filteredAthleteIDs = athleteIDs[:quantityArg]
+    elif (dataSet == "l"): # last X
+        filteredAthleteIDs = athleteIDs[-quantityArg:]
+    elif (dataSet == "r"): # random X
+        filteredAthleteIDs = random.sample(athleteIDs, quantityArg)
+    else:
+        print("Filtro desconhecido. Ler documentação.")
+        return # do not execute script
+
 
 fetchAthleteIDs = input('Insire IDs dos atletas: ') # example: 115321, 123812, 251180
 fetchAthleteIDs = fetchAthleteIDs.split(",")
