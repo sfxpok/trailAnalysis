@@ -47,6 +47,11 @@ def getFilter(dataSet, numberOfAthletes, athleteIDs):
         filteredAthleteIDs = athleteIDs[-numberOfAthletes:]
     elif (dataSet == "-r"): # random X
         filteredAthleteIDs = random.sample(list(athleteIDs), numberOfAthletes)
+    elif (dataSet == "-s"): # M or F?
+        filterSex = input("Qual é o sexo? M/F?")
+        # get data
+    elif (dataSet == "-e"): # which echelon?
+        filterEchelon = input ("Qual é o escalão? NÃO FUNCIONA")
     else: # do not execute script
         print("Filtro desconhecido. Ler documentação.")
         sys.exit(1)
