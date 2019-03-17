@@ -39,9 +39,23 @@ def convertTimeToSeconds(checkPointTime):
 
     return CPTimeSeconds
 
+def competitionFilter(df):
+
+    # competitionDF = pd.read_json('competitions.json', lines=True)
+
+    with open('competitions.json') as f:
+        competitionData = json.load(f)
+
+    df = df['competition_id'].unique()
+
+    return df
+
 def getFilter(dataSet, numberOfAthletes, athleteIDs):
     # import every athlete from a competition to a dataframe
     if (dataSet == "-f"): # first X
+
+
+
         filteredAthleteIDs = athleteIDs[:numberOfAthletes]
     elif (dataSet == "-l"): # last X
         filteredAthleteIDs = athleteIDs[-numberOfAthletes:]
@@ -50,14 +64,20 @@ def getFilter(dataSet, numberOfAthletes, athleteIDs):
     elif (dataSet == "-s"): # M or F?
         filterSex = input("Qual é o sexo? M/F? NÃO TESTADO")
         
-        athleteIDs = dataSet['sex'] = filterSex
+        athleteIDs = dataSet['sex'] = filterSex # não é dataSet, altera o dataframe usado..
         filteredAthleteIDs = athleteIDs[:numberOfAthletes]
 
     elif (dataSet == "-e"): # which echelon?
-        filterEchelon = input ("Qual é o escalão? NÃO TESTADO")
+        filterEchelon = input("Qual é o escalão? NÃO TESTADO")
 
-        athleteIDs = dataSet['echelon'] = filterEchelon
+        athleteIDs = dataSet['echelon'] = filterEchelon # não é dataSet, altera o dataframe usado..
         filteredAthleteIDs = athleteIDs[:numberOfAthletes]
+
+    elif (dataSet == "-c"): # which competition?
+        filterCompetition = input("Qual é a competição? MIUT/ULTRA/Marathon/Mini")
+        filterYearComp = input("Qual é o ano da competição?")
+
+
 
     else: # do not execute script
         print("Filtro desconhecido. Ler documentação.")
