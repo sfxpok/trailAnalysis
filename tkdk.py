@@ -39,14 +39,15 @@ def convertTimeToSeconds(checkPointTime):
 
     return CPTimeSeconds
 
-def competitionFilter(df):
+def competitionFilter(df, competitonName, competitionYear):
 
-    # competitionDF = pd.read_json('competitions.json', lines=True)
+    dfCompetition = pd.read_json("competitions.json", orient='columns')
 
-    with open('competitions.json') as f:
-        competitionData = json.load(f)
+    dfCompetition = dfCompetition.query('name == competitionName & year == competitionYear')
 
-    df = df['competition_id'].unique()
+    fetchCompetition = dfCompetition['competition_id'][0]
+    
+    df = df.query('competition_id == fetchCompetition')
 
     return df
 
