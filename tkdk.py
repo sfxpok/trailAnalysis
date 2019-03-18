@@ -142,6 +142,8 @@ def createPlots(filteredAthleteIDs, df):
         ax.plot(Xdist, regression_line, color="red")
         ax.set_xlabel('distância percorrida')
         ax.set_ylabel('tempo passado')
+        plt.xlim(0, 120000)
+        plt.ylim(0, 80000)
         plt.savefig(str(athlete) + '_xDistance_yTime')
 
         #plt.show()   
