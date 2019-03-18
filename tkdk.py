@@ -39,23 +39,26 @@ def convertTimeToSeconds(checkPointTime):
 
     return CPTimeSeconds
 
-def competitionFilter(df, competitonName, competitionYear):
+def competitionFilter(df, competitionName, competitionYear):
 
     dfCompetition = pd.read_json("competitions.json", orient='columns')
-
-    dfCompetition = dfCompetition.query('name == competitionName & year == competitionYear')
-
-    fetchCompetition = dfCompetition['competition_id'][0]
     
-    df = df.query('competition_id == fetchCompetition')
+    dfCompetition['year'] = dfCompetition['year'].astype(int)
+    competitionYear = int(competitionYear)
+
+    dfCompetition = dfCompetition.loc[(dfCompetition['name'] == str.upper(competitionName)) | (dfCompetition['name'] == str.capitalize(competitionName))]
+    dfCompetition = dfCompetition.loc[dfCompetition['year'] == competitionYear]
+
+    fetchCompetition = int(dfCompetition['competition_id'])
+    
+    #df = df.query('competition_id == fetchCompetition')
+    df = df[df.Competition == fetchCompetition]
 
     return df
 
 def getFilter(dataSet, numberOfAthletes, athleteIDs):
     # import every athlete from a competition to a dataframe
     if (dataSet == "-f"): # first X
-
-
 
         filteredAthleteIDs = athleteIDs[:numberOfAthletes]
     elif (dataSet == "-l"): # last X
@@ -73,13 +76,6 @@ def getFilter(dataSet, numberOfAthletes, athleteIDs):
 
         athleteIDs = dataSet['echelon'] = filterEchelon # não é dataSet, altera o dataframe usado..
         filteredAthleteIDs = athleteIDs[:numberOfAthletes]
-
-    elif (dataSet == "-c"): # which competition?
-        filterCompetition = input("Qual é a competição? MIUT/ULTRA/Marathon/Mini")
-        filterYearComp = input("Qual é o ano da competição?")
-
-
-
     else: # do not execute script
         print("Filtro desconhecido. Ler documentação.")
         sys.exit(1)
@@ -88,6 +84,12 @@ def getFilter(dataSet, numberOfAthletes, athleteIDs):
 
 def main():
     df = pd.read_csv('MIUT2014-2018_temposEdistancias.csv') # read CSV file
+
+    filterCompetition = input("Qual é a competição? MIUT/ULTRA/Marathon/Mini")
+    filterYearComp = input("Qual é o ano da competição?")
+    
+    df = competitionFilter(df, filterCompetition, filterYearComp)
+
     athleteIDs = df['inscription_athlete_athlete_id'].unique()
 
     if len(sys.argv) == 1:
