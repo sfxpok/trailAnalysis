@@ -56,26 +56,31 @@ def competitionFilter(df, competitionName, competitionYear):
 
     return df
 
-def getFilter(dataSet, numberOfAthletes, athleteIDs):
+def getFilter(filterArg, numberOfAthletes, athleteIDs, dfFiltered):
     # import every athlete from a competition to a dataframe
-    if (dataSet == "-f"): # first X
-
+    if (filterArg == "-f"): # first X
         filteredAthleteIDs = athleteIDs[:numberOfAthletes]
-    elif (dataSet == "-l"): # last X
+    elif (filterArg == "-l"): # last X
         filteredAthleteIDs = athleteIDs[-numberOfAthletes:]
-    elif (dataSet == "-r"): # random X
+    elif (filterArg == "-r"): # random X
         filteredAthleteIDs = random.sample(list(athleteIDs), numberOfAthletes)
-    elif (dataSet == "-s"): # M or F?
+    elif (filterArg == "-s"): # M or F?
         filterSex = input("Qual é o sexo? M/F? NÃO TESTADO")
         
-        athleteIDs = dataSet['sex'] = filterSex # não é dataSet, altera o dataframe usado..
-        filteredAthleteIDs = athleteIDs[:numberOfAthletes]
+        dfFiltered = dfFiltered.loc[dfFiltered['sex'] == filterSex]
+        athleteIDs = dfFiltered['inscription_athlete_athlete_id'].unique()
 
-    elif (dataSet == "-e"): # which echelon?
+        # athleteIDs = filterArg['sex'] = filterSex
+        filteredAthleteIDs = random.sample(list(athleteIDs), numberOfAthletes)
+
+    elif (filterArg == "-e"): # which echelon?
         filterEchelon = input("Qual é o escalão? NÃO TESTADO")
 
-        athleteIDs = dataSet['echelon'] = filterEchelon # não é dataSet, altera o dataframe usado..
-        filteredAthleteIDs = athleteIDs[:numberOfAthletes]
+        dfFiltered = dfFiltered.loc[dfFiltered['echelon'] == filterEchelon]
+        athleteIDs = dfFiltered['inscription_athlete_athlete_id'].unique()        
+
+        #athleteIDs = filterArg['echelon'] = filterEchelon
+        filteredAthleteIDs = random.sample(list(athleteIDs), numberOfAthletes)
     else: # do not execute script
         print("Filtro desconhecido. Ler documentação.")
         sys.exit(1)
@@ -94,11 +99,11 @@ def main():
 
     if len(sys.argv) == 1:
         quantityArg = input('Quantos atletas?: ')
-        createPlots(getFilter('-r', int(quantityArg), athleteIDs), df)
+        createPlots(getFilter('-r', int(quantityArg), athleteIDs, df), df)
     else:
         filterArg = sys.argv[1]
         quantityArg = int(sys.argv[2])
-        createPlots(getFilter(filterArg, quantityArg, athleteIDs), df)
+        createPlots(getFilter(filterArg, quantityArg, athleteIDs, df), df)
 
 def createPlots(filteredAthleteIDs, df):
 
