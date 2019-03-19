@@ -13,7 +13,7 @@ from statistics import mean
 
 # function for linear regression
 
-def best_fit_slope_and_intercept(xs,ys):
+def best_fit_slope_and_intercept(xs, ys):
     m = (((mean(xs)*mean(ys)) - mean(xs*ys)) /
          ((mean(xs)*mean(xs)) - mean(xs*xs)))
     
@@ -107,18 +107,20 @@ def main():
 
 def createPlots(filteredAthleteIDs, df):
 
-    for athlete in filteredAthleteIDs: # athletes over 24h on the competitive will have bad results @ see CPTimeSeconds
+    for athlete in filteredAthleteIDs:
     
         print("### Processing athlete number: " + str(athlete) + " ###")
 
         # NOTA: Podem haver atletas que não foram registados em alguns CPs
 
-        tempAthleteData = df[df['inscription_athlete_athlete_id'] == int(athlete)]
-        tempAthleteData.iloc[-1, tempAthleteData.columns.get_loc('checkpoint_order')] = 14
+        tempAthleteData = cleanDataToPlot(athlete, df)
 
-        CPTimeInt64 = pd.DatetimeIndex(tempAthleteData['CPTime']) # datatype conversion
+        #tempAthleteData = df[df['inscription_athlete_athlete_id'] == int(athlete)]
+        #tempAthleteData.iloc[-1, tempAthleteData.columns.get_loc('checkpoint_order')] = 14
 
-        tempAthleteData['CPTimeSeconds'] = convertTimeToSeconds(CPTimeInt64)
+        #CPTimeInt64 = pd.DatetimeIndex(tempAthleteData['CPTime']) # datatype conversion
+
+        #tempAthleteData['CPTimeSeconds'] = convertTimeToSeconds(CPTimeInt64)
 
         # line plot; X: CP number; Y: time passed
         #fig, ax = plt.subplots()
@@ -137,7 +139,7 @@ def createPlots(filteredAthleteIDs, df):
         regression_line = [(m*x)+b for x in Xdist]
 
         # scatter plot; X: distance traveled; Y: time passed
-        fig, ax = plt.subplots()
+        ax = plt.subplot()
         ax.scatter(Xdist, Ytime)
         ax.plot(Xdist, regression_line, color="red")
         ax.set_xlabel('distância percorrida')
@@ -146,7 +148,51 @@ def createPlots(filteredAthleteIDs, df):
         plt.ylim(0, 80000)
         plt.savefig(str(athlete) + '_xDistance_yTime')
 
-        #plt.show()   
+        #plt.show()
+
+def cleanDataToPlot(athleteID, df):
+    athleteData = df[df['inscription_athlete_athlete_id'] == int(athleteID)]
+    athleteData.iloc[-1, athleteData.columns.get_loc('checkpoint_order')] = 14
+
+    CPTimeInt64 = pd.DatetimeIndex(athleteData['CPTime']) # datatype conversion
+
+    athleteData['CPTimeSeconds'] = convertTimeToSeconds(CPTimeInt64)
+
+    return athleteData
+
+def multiplePlotting(filteredAthleteIDs, df):
+
+    Xdist = []
+    Ytime = []
+    regression_line = []
+
+    for athlete in filteredAthleteIDs:
+
+        print("### Processing athlete number: " + str(athlete) + " ###")
+
+        tempAthleteData = cleanDataToPlot(athlete, df)
+
+        Xdist.append(tempAthleteData['distancia_acumulada'])
+        Ytime.append(tempAthleteData['CPTimeSeconds'])
+        m, b = best_fit_slope_and_intercept(Xdist, Ytime)
+
+        # regression_line = [] # clean array, this is important
+        regression_line.append([(m*x)+b for x in Xdist])
+
+        #ax2.scatter()
+        #ax3.scatter()
+
+    fig1 = plt.figure()
+
+    ax1 = fig1.add_subplot(111)
+
+    ax1.scatter(Xdist, Ytime)
+    ax1.plot(Xdist, regression_line, color="red")
+
+
+    plt.savefig("testingMultPlot")
+    plt.show()
+
 
 def getAthletesManually():
     filteredAthleteIDs = input('Insire IDs dos atletas: ') # example: 115321, 123812, 251180
