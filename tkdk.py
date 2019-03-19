@@ -176,10 +176,6 @@ def multiplePlotting(filteredAthleteIDs, df):
 
     Xdist = []
     Ytime = []
-    #regression_line = []
-
-    fig1 = plt.figure()
-    ax1 = fig1.add_subplot(111)
 
     for athlete in filteredAthleteIDs:
 
@@ -190,31 +186,15 @@ def multiplePlotting(filteredAthleteIDs, df):
         Xdist = tempAthleteData['distancia_acumulada']
         Ytime = tempAthleteData['CPTimeSeconds']
 
-        # m, b = best_fit_slope_and_intercept(Xdist, Ytime)
-
-        # regression_line = [] # clean array, this is important
-        # regression_line.append([(m*x)+b for x in Xdist])
-
         regression_line = regressionLineCalculate(Xdist, Ytime)
 
         ax = plt.subplot()
         ax.scatter(Xdist, Ytime)
-        ax.plot(Xdist, regression_line, color="red")
+        ax.plot(Xdist, regression_line)
         ax.set_xlabel('distância percorrida')
         ax.set_ylabel('tempo passado')
         plt.xlim(0, 120000)
         plt.ylim(0, 80000)
-
-        #ax2.scatter()
-        #ax3.scatter()
-
-    #fig1 = plt.figure()
-
-    #ax1 = fig1.add_subplot(111)
-
-    #ax1.scatter(Xdist, Ytime)
-    #ax1.plot(Xdist, regression_line, color="red")
-
 
     plt.savefig("testingMultPlot")
     plt.show()
