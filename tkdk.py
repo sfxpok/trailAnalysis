@@ -172,6 +172,15 @@ def regressionLineCalculate(X, Y):
 
     return regression_line
 
+def getCompetitionLabel(competitionID):
+
+    dfCompetition = pd.read_json("competitions.json", orient='columns')
+    dfCompetition = dfCompetition.loc[dfCompetition['competition_id'] == int(competitionID)]
+    competitionLabel = dfCompetition["name"] + " " + dfCompetition["year"].map(str)
+    competitionLabel = competitionLabel.iloc[0]
+
+    return competitionLabel
+
 def multiplePlotting(filteredAthleteIDs, df):
 
     Xdist = []
@@ -185,17 +194,20 @@ def multiplePlotting(filteredAthleteIDs, df):
 
         Xdist = tempAthleteData['distancia_acumulada']
         Ytime = tempAthleteData['CPTimeSeconds']
+        competitionID = tempAthleteData.iloc[0]['Competition']
 
         regression_line = regressionLineCalculate(Xdist, Ytime)
+        competitionLabel = getCompetitionLabel(competitionID)
 
         ax = plt.subplot()
-        ax.scatter(Xdist, Ytime)
+        ax.scatter(Xdist, Ytime, label = competitionLabel)
         ax.plot(Xdist, regression_line)
         ax.set_xlabel('distância percorrida')
         ax.set_ylabel('tempo passado')
         plt.xlim(0, 120000)
         plt.ylim(0, 80000)
 
+    plt.legend()
     plt.savefig("testingMultPlot")
     plt.show()
 
