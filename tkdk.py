@@ -133,10 +133,13 @@ def createPlots(filteredAthleteIDs, df):
         # preparing data to calculate linear regression
         Xdist = tempAthleteData['distancia_acumulada']
         Ytime = tempAthleteData['CPTimeSeconds']
-        m, b = best_fit_slope_and_intercept(Xdist, Ytime)
+        #m, b = best_fit_slope_and_intercept(Xdist, Ytime)
 
-        regression_line = [] # clean array, this is important
-        regression_line = [(m*x)+b for x in Xdist]
+        #regression_line = [] # clean array, this is important
+        #regression_line = [(m*x)+b for x in Xdist]
+
+        regression_line = regressionLineCalculate(Xdist, Ytime)
+
 
         # scatter plot; X: distance traveled; Y: time passed
         ax = plt.subplot()
@@ -165,7 +168,7 @@ def regressionLineCalculate(X, Y):
     m, b = best_fit_slope_and_intercept(X, Y)
 
     regression_line = [] # clean array, this is important
-    regression_line.append([(m*x)+b for x in X])
+    regression_line = [(m*x)+b for x in X]
 
     return regression_line
 
@@ -173,7 +176,7 @@ def multiplePlotting(filteredAthleteIDs, df):
 
     Xdist = []
     Ytime = []
-    regression_line = []
+    #regression_line = []
 
     fig1 = plt.figure()
     ax1 = fig1.add_subplot(111)
@@ -184,8 +187,8 @@ def multiplePlotting(filteredAthleteIDs, df):
 
         tempAthleteData = cleanDataToPlot(athlete, df)
 
-        Xdist.append(tempAthleteData['distancia_acumulada'])
-        Ytime.append(tempAthleteData['CPTimeSeconds'])
+        Xdist = tempAthleteData['distancia_acumulada']
+        Ytime = tempAthleteData['CPTimeSeconds']
 
         # m, b = best_fit_slope_and_intercept(Xdist, Ytime)
 
@@ -194,8 +197,13 @@ def multiplePlotting(filteredAthleteIDs, df):
 
         regression_line = regressionLineCalculate(Xdist, Ytime)
 
-        ax1.scatter(Xdist[athlete], Ytime[athlete])
-        ax1.plot(Xdist, regression_line, color="red")
+        ax = plt.subplot()
+        ax.scatter(Xdist, Ytime)
+        ax.plot(Xdist, regression_line, color="red")
+        ax.set_xlabel('distância percorrida')
+        ax.set_ylabel('tempo passado')
+        plt.xlim(0, 120000)
+        plt.ylim(0, 80000)
 
         #ax2.scatter()
         #ax3.scatter()
@@ -204,7 +212,7 @@ def multiplePlotting(filteredAthleteIDs, df):
 
     #ax1 = fig1.add_subplot(111)
 
-    ax1.scatter(Xdist, Ytime)
+    #ax1.scatter(Xdist, Ytime)
     #ax1.plot(Xdist, regression_line, color="red")
 
 
@@ -217,8 +225,8 @@ def getAthletesManually():
     filteredAthleteIDs = filteredAthleteIDs.split(",")
     filteredAthleteIDs = [x.strip(' ') for x in filteredAthleteIDs] # making sure there are no spaces
 
-#if __name__ == '__main__':
-    #main()
+if __name__ == '__main__':
+    main()
 
 # MIUT2018 athlete IDs
 # first 9 athletes
