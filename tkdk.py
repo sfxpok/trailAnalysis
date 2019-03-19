@@ -160,11 +160,23 @@ def cleanDataToPlot(athleteID, df):
 
     return athleteData
 
+def regressionLineCalculate(X, Y):
+
+    m, b = best_fit_slope_and_intercept(X, Y)
+
+    regression_line = [] # clean array, this is important
+    regression_line.append([(m*x)+b for x in X])
+
+    return regression_line
+
 def multiplePlotting(filteredAthleteIDs, df):
 
     Xdist = []
     Ytime = []
     regression_line = []
+
+    fig1 = plt.figure()
+    ax1 = fig1.add_subplot(111)
 
     for athlete in filteredAthleteIDs:
 
@@ -174,20 +186,26 @@ def multiplePlotting(filteredAthleteIDs, df):
 
         Xdist.append(tempAthleteData['distancia_acumulada'])
         Ytime.append(tempAthleteData['CPTimeSeconds'])
-        m, b = best_fit_slope_and_intercept(Xdist, Ytime)
+
+        # m, b = best_fit_slope_and_intercept(Xdist, Ytime)
 
         # regression_line = [] # clean array, this is important
-        regression_line.append([(m*x)+b for x in Xdist])
+        # regression_line.append([(m*x)+b for x in Xdist])
+
+        regression_line = regressionLineCalculate(Xdist, Ytime)
+
+        ax1.scatter(Xdist[athlete], Ytime[athlete])
+        ax1.plot(Xdist, regression_line, color="red")
 
         #ax2.scatter()
         #ax3.scatter()
 
-    fig1 = plt.figure()
+    #fig1 = plt.figure()
 
-    ax1 = fig1.add_subplot(111)
+    #ax1 = fig1.add_subplot(111)
 
     ax1.scatter(Xdist, Ytime)
-    ax1.plot(Xdist, regression_line, color="red")
+    #ax1.plot(Xdist, regression_line, color="red")
 
 
     plt.savefig("testingMultPlot")
@@ -199,8 +217,8 @@ def getAthletesManually():
     filteredAthleteIDs = filteredAthleteIDs.split(",")
     filteredAthleteIDs = [x.strip(' ') for x in filteredAthleteIDs] # making sure there are no spaces
 
-if __name__ == '__main__':
-    main()
+#if __name__ == '__main__':
+    #main()
 
 # MIUT2018 athlete IDs
 # first 9 athletes
