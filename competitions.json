@@ -1,5 +1,37 @@
 [
 	{
+		"competition_id" : 15,
+		"name" : "UT115",
+		"year" : "2014",
+		"total_distance" : "115",
+		"trail_event_trail_event_id" : 10,
+		"long_name" : "Ultra Trail 115",
+	},
+	{
+		"competition_id" : 14,
+		"name" : "UT85",
+		"year" : "2014",
+		"total_distance" : "85",
+		"trail_event_trail_event_id" : 10,
+		"long_name" : "Ultra Trail 85",
+	},
+	{
+		"competition_id" : 13,
+		"name" : "T40",
+		"year" : "2014",
+		"total_distance" : "40",
+		"trail_event_trail_event_id" : 10,
+		"long_name" : "Trail 40",
+	},
+	{
+		"competition_id" : 12,
+		"name" : "T20",
+		"year" : "2014",
+		"total_distance" : "20",
+		"trail_event_trail_event_id" : 10,
+		"long_name" : "Trail 20",
+	},
+	{
 		"competition_id" : 27,
 		"name" : "MIUT",
 		"year" : "2015",
