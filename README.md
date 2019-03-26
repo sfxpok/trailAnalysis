@@ -11,3 +11,9 @@ Available options for ```-filter```:
 - -r (fetch random ```numberOfPeople``` rows)
 
 ```numberOfPeople``` argument can only be an positive integer.
+
+### Dependencies
+
+- NumPy
+- pandas
+- scikit-learn

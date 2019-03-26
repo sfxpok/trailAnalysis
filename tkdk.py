@@ -74,7 +74,7 @@ def getFilter(filterArg, numberOfAthletes, athleteIDs, dfFiltered):
         filteredAthleteIDs = random.sample(list(athleteIDs), numberOfAthletes)
 
     elif (filterArg == "-e"): # which echelon?
-        filterEchelon = input("Qual é o escalão? NÃO TESTADO")
+        filterEchelon = input("Qual é o escalão? NÃO TESTADO") # hard filter to create because it is mixed with sex
 
         dfFiltered = dfFiltered.loc[dfFiltered['echelon'] == filterEchelon]
         athleteIDs = dfFiltered['inscription_athlete_athlete_id'].unique()        
