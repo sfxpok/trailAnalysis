@@ -109,6 +109,8 @@ def createPlots(filteredAthleteIDs, df):
 
     for athlete in filteredAthleteIDs:
     
+        plt.clf() # clean plot
+
         print("### Processing athlete number: " + str(athlete) + " ###")
 
         # NOTA: Podem haver atletas que não foram registados em alguns CPs
