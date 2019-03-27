@@ -1,43 +1,14 @@
-#!/usr/bin/env python3
-
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import sys
 import random
 from sklearn import datasets, linear_model
-from statistics import mean
+
+import filter
 
 # time must be in seconds
 # distance must be in meters
-
-# function for linear regression
-
-def best_fit_slope_and_intercept(xs, ys):
-    m = (((mean(xs)*mean(ys)) - mean(xs*ys)) /
-         ((mean(xs)*mean(xs)) - mean(xs*xs)))
-    
-    b = mean(ys) - m*mean(xs)
-    
-    return m, b
-
-# convert hh:mm:ss to seconds
-
-def convertTimeToSeconds(checkPointTime):
-    startTime = checkPointTime.hour[0]
-    startTimeToMidnightInSeconds = 60*60*(24-startTime)
-
-    startDay = checkPointTime.day[0]
-
-    CPTimeSeconds = []
-
-    for i in range(len(checkPointTime.day)):
-        if (i > 0 and i < len(checkPointTime.day)) and (checkPointTime.day[i] != startDay):
-            CPTimeSeconds.append(checkPointTime.hour[i] * 3600 + checkPointTime.minute[i] * 60 + checkPointTime.second[i] + startTimeToMidnightInSeconds) # hhmmss to seconds
-        else:
-            CPTimeSeconds.append(checkPointTime.hour[i] * 3600 + checkPointTime.minute[i] * 60 + checkPointTime.second[i])
-
-    return CPTimeSeconds
 
 def competitionFilter(df, competitionName, competitionYear):
 
@@ -86,27 +57,6 @@ def getFilter(filterArg, numberOfAthletes, athleteIDs, dfFiltered):
         sys.exit(1)
     
     return filteredAthleteIDs
-
-def main():
-
-    csvfile = pd.read_json("config.json")
-
-    df = pd.read_csv(csvfile.loc[0, 'csvfile']) # read CSV file
-
-    filterCompetition = input("Qual é a competição? MIUT/ULTRA/Marathon/Mini")
-    filterYearComp = input("Qual é o ano da competição?")
-    
-    df = competitionFilter(df, filterCompetition, filterYearComp)
-
-    athleteIDs = df['inscription_athlete_athlete_id'].unique()
-
-    if len(sys.argv) == 1:
-        quantityArg = input('Quantos atletas?: ')
-        createPlots(getFilter('-r', int(quantityArg), athleteIDs, df), df)
-    else:
-        filterArg = sys.argv[1]
-        quantityArg = int(sys.argv[2])
-        createPlots(getFilter(filterArg, quantityArg, athleteIDs, df), df)
 
 def createPlots(filteredAthleteIDs, df):
 
@@ -221,9 +171,6 @@ def getAthletesManually():
     filteredAthleteIDs = input('Insire IDs dos atletas: ') # example: 115321, 123812, 251180
     filteredAthleteIDs = filteredAthleteIDs.split(",")
     filteredAthleteIDs = [x.strip(' ') for x in filteredAthleteIDs] # making sure there are no spaces
-
-if __name__ == '__main__':
-    main()
 
 # MIUT2018 athlete IDs
 # first 9 athletes
