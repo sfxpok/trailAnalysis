@@ -88,7 +88,10 @@ def getFilter(filterArg, numberOfAthletes, athleteIDs, dfFiltered):
     return filteredAthleteIDs
 
 def main():
-    df = pd.read_csv('MIUT2014-2018_temposEdistancias.csv') # read CSV file
+
+    csvfile = pd.read_json("config.json")
+
+    df = pd.read_csv(csvfile.loc[0, 'csvfile']) # read CSV file
 
     filterCompetition = input("Qual é a competição? MIUT/ULTRA/Marathon/Mini")
     filterYearComp = input("Qual é o ano da competição?")
