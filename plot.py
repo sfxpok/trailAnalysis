@@ -2,61 +2,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import sys
-import random
 from sklearn import datasets, linear_model
 
 import filter
 
 # time must be in seconds
 # distance must be in meters
-
-def competitionFilter(df, competitionName, competitionYear):
-
-    dfCompetition = pd.read_json("competitions.json", orient='columns')
-    
-    dfCompetition['year'] = dfCompetition['year'].astype(int)
-    competitionYear = int(competitionYear)
-
-    dfCompetition = dfCompetition.loc[(dfCompetition['name'] == str.upper(competitionName)) | (dfCompetition['name'] == str.capitalize(competitionName))]
-    dfCompetition = dfCompetition.loc[dfCompetition['year'] == competitionYear]
-
-    fetchCompetition = int(dfCompetition['competition_id'])
-    
-    #df = df.query('competition_id == fetchCompetition')
-    df = df[df.Competition == fetchCompetition]
-
-    return df
-
-def getFilter(filterArg, numberOfAthletes, athleteIDs, dfFiltered):
-    # import every athlete from a competition to a dataframe
-    if (filterArg == "-f"): # first X
-        filteredAthleteIDs = athleteIDs[:numberOfAthletes]
-    elif (filterArg == "-l"): # last X
-        filteredAthleteIDs = athleteIDs[-numberOfAthletes:]
-    elif (filterArg == "-r"): # random X
-        filteredAthleteIDs = random.sample(list(athleteIDs), numberOfAthletes)
-    elif (filterArg == "-s"): # M or F?
-        filterSex = input("Qual é o sexo? M/F? NÃO TESTADO")
-        
-        dfFiltered = dfFiltered.loc[dfFiltered['sex'] == filterSex]
-        athleteIDs = dfFiltered['inscription_athlete_athlete_id'].unique()
-
-        # athleteIDs = filterArg['sex'] = filterSex
-        filteredAthleteIDs = random.sample(list(athleteIDs), numberOfAthletes)
-
-    elif (filterArg == "-e"): # which echelon?
-        filterEchelon = input("Qual é o escalão? NÃO TESTADO") # hard filter to create because it is mixed with sex
-
-        dfFiltered = dfFiltered.loc[dfFiltered['echelon'] == filterEchelon]
-        athleteIDs = dfFiltered['inscription_athlete_athlete_id'].unique()        
-
-        #athleteIDs = filterArg['echelon'] = filterEchelon
-        filteredAthleteIDs = random.sample(list(athleteIDs), numberOfAthletes)
-    else: # do not execute script
-        print("Filtro desconhecido. Ler documentação.")
-        sys.exit(1)
-    
-    return filteredAthleteIDs
 
 def createPlots(filteredAthleteIDs, df):
 
@@ -93,8 +44,7 @@ def createPlots(filteredAthleteIDs, df):
         #regression_line = [] # clean array, this is important
         #regression_line = [(m*x)+b for x in Xdist]
 
-        regression_line = regressionLineCalculate(Xdist, Ytime)
-
+        regression_line = filter.regressionLineCalculate(Xdist, Ytime)
 
         # scatter plot; X: distance traveled; Y: time passed
         ax = plt.subplot()
@@ -114,18 +64,9 @@ def cleanDataToPlot(athleteID, df):
 
     CPTimeInt64 = pd.DatetimeIndex(athleteData['CPTime']) # datatype conversion
 
-    athleteData['CPTimeSeconds'] = convertTimeToSeconds(CPTimeInt64)
+    athleteData['CPTimeSeconds'] = filter.convertTimeToSeconds(CPTimeInt64)
 
     return athleteData
-
-def regressionLineCalculate(X, Y):
-
-    m, b = best_fit_slope_and_intercept(X, Y)
-
-    regression_line = [] # clean array, this is important
-    regression_line = [(m*x)+b for x in X]
-
-    return regression_line
 
 def getCompetitionLabel(competitionID):
 
@@ -151,7 +92,7 @@ def multiplePlotting(filteredAthleteIDs, df):
         Ytime = tempAthleteData['CPTimeSeconds']
         competitionID = tempAthleteData.iloc[0]['Competition']
 
-        regression_line = regressionLineCalculate(Xdist, Ytime)
+        regression_line = filter.regressionLineCalculate(Xdist, Ytime)
         competitionLabel = getCompetitionLabel(competitionID)
 
         ax = plt.subplot()

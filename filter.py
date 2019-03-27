@@ -1,14 +1,31 @@
+import random
+import sys
+import pandas as pd
 from statistics import mean
 
 # function for linear regression
 
 def best_fit_slope_and_intercept(xs, ys):
-    m = (((mean(xs)*mean(ys)) - mean(xs*ys)) /
-         ((mean(xs)*mean(xs)) - mean(xs*xs)))
+
+    try:
+        m = (((mean(xs)*mean(ys)) - mean(xs*ys)) /
+            ((mean(xs)*mean(xs)) - mean(xs*xs)))
     
-    b = mean(ys) - m*mean(xs)
+        b = mean(ys) - m*mean(xs)
     
-    return m, b
+        return m, b
+    except ZeroDivisionError:
+        print("Divisão por zero no cálculo da regressão linear.")
+        sys.exit(1)
+
+def regressionLineCalculate(X, Y):
+
+    m, b = best_fit_slope_and_intercept(X, Y)
+
+    regression_line = [] # clean array, this is important
+    regression_line = [(m*x)+b for x in X]
+
+    return regression_line
 
 # convert hh:mm:ss to seconds
 
@@ -27,3 +44,51 @@ def convertTimeToSeconds(checkPointTime):
             CPTimeSeconds.append(checkPointTime.hour[i] * 3600 + checkPointTime.minute[i] * 60 + checkPointTime.second[i])
 
     return CPTimeSeconds
+
+def competitionFilter(df, competitionName, competitionYear):
+
+    dfCompetition = pd.read_json("competitions.json", orient='columns')
+    
+    dfCompetition['year'] = dfCompetition['year'].astype(int)
+    competitionYear = int(competitionYear)
+
+    dfCompetition = dfCompetition.loc[(dfCompetition['name'] == str.upper(competitionName)) | (dfCompetition['name'] == str.capitalize(competitionName))]
+    dfCompetition = dfCompetition.loc[dfCompetition['year'] == competitionYear]
+
+    fetchCompetition = int(dfCompetition['competition_id'])
+    
+    #df = df.query('competition_id == fetchCompetition')
+    df = df[df.Competition == fetchCompetition]
+
+    return df
+
+def getFilter(filterArg, numberOfAthletes, athleteIDs, dfFiltered):
+    # import every athlete from a competition to a dataframe
+    if (filterArg == "-f"): # first X
+        filteredAthleteIDs = athleteIDs[:numberOfAthletes]
+    elif (filterArg == "-l"): # last X
+        filteredAthleteIDs = athleteIDs[-numberOfAthletes:]
+    elif (filterArg == "-r"): # random X
+        filteredAthleteIDs = random.sample(list(athleteIDs), numberOfAthletes)
+    elif (filterArg == "-s"): # M or F?
+        filterSex = input("Qual é o sexo? M/F? NÃO TESTADO")
+        
+        dfFiltered = dfFiltered.loc[dfFiltered['sex'] == filterSex]
+        athleteIDs = dfFiltered['inscription_athlete_athlete_id'].unique()
+
+        # athleteIDs = filterArg['sex'] = filterSex
+        filteredAthleteIDs = random.sample(list(athleteIDs), numberOfAthletes)
+
+    elif (filterArg == "-e"): # which echelon?
+        filterEchelon = input("Qual é o escalão? NÃO TESTADO") # hard filter to create because it is mixed with sex
+
+        dfFiltered = dfFiltered.loc[dfFiltered['echelon'] == filterEchelon]
+        athleteIDs = dfFiltered['inscription_athlete_athlete_id'].unique()        
+
+        #athleteIDs = filterArg['echelon'] = filterEchelon
+        filteredAthleteIDs = random.sample(list(athleteIDs), numberOfAthletes)
+    else: # do not execute script
+        print("Filtro desconhecido. Ler documentação.")
+        sys.exit(1)
+    
+    return filteredAthleteIDs
