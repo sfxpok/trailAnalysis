@@ -14,6 +14,7 @@ def best_fit_slope_and_intercept(xs, ys):
         b = mean(ys) - m*mean(xs)
     
         return m, b
+        
     except ZeroDivisionError:
         print("Divisão por zero no cálculo da regressão linear.")
         sys.exit(1)
@@ -62,9 +63,26 @@ def competitionFilter(df, competitionName, competitionYear):
 
     return df
 
-def getFilter(filterArg, numberOfAthletes, athleteIDs, dfFiltered):
+def createOrderedBoard(df): # change this name
+
+    dfFiltered = df[['checkpoint_order', 'inscription_athlete_athlete_id', 'CPTime']]
+    lastCP = dfFiltered.loc[dfFiltered['checkpoint_order'].idxmax()][0]
+    dfFiltered = dfFiltered.loc[dfFiltered['checkpoint_order'] == lastCP]
+
+    #dfFiltered = dfFiltered.drop_duplicates(['inscription_athlete_athlete_id'], keep='last')
+    CPTimeInt64 = pd.DatetimeIndex(dfFiltered['CPTime'])
+    dfFiltered['CPTime'] = convertTimeToSeconds(CPTimeInt64)
+
+    dfFiltered = dfFiltered.sort_values(by = ['CPTime'])
+
+    return dfFiltered    
+
+def getFilter(filterArg, numberOfAthletes, athleteIDs, dfFiltered, df):
     # import every athlete from a competition to a dataframe
     if (filterArg == "-f"): # first X
+
+        sumAllAthleteCPTime(df)
+
         filteredAthleteIDs = athleteIDs[:numberOfAthletes]
     elif (filterArg == "-l"): # last X
         filteredAthleteIDs = athleteIDs[-numberOfAthletes:]
