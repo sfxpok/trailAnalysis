@@ -75,6 +75,9 @@ def createOrderedBoard(df): # change this name
 
     dfFiltered = dfFiltered.sort_values(by = ['CPTime'])
 
+    # if you want athletes in the last places, just reverse the data
+    # dfFiltered = dfFiltered.iloc[::-1]
+
     return dfFiltered    
 
 def getFilter(filterArg, numberOfAthletes, athleteIDs, dfFiltered, df):

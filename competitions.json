@@ -5,7 +5,7 @@
 		"year" : "2014",
 		"total_distance" : "115",
 		"trail_event_trail_event_id" : 10,
-		"long_name" : "Ultra Trail 115",
+		"long_name" : "Ultra Trail 115"
 	},
 	{
 		"competition_id" : 14,
@@ -13,7 +13,7 @@
 		"year" : "2014",
 		"total_distance" : "85",
 		"trail_event_trail_event_id" : 10,
-		"long_name" : "Ultra Trail 85",
+		"long_name" : "Ultra Trail 85"
 	},
 	{
 		"competition_id" : 13,
@@ -21,7 +21,7 @@
 		"year" : "2014",
 		"total_distance" : "40",
 		"trail_event_trail_event_id" : 10,
-		"long_name" : "Trail 40",
+		"long_name" : "Trail 40"
 	},
 	{
 		"competition_id" : 12,
@@ -29,7 +29,7 @@
 		"year" : "2014",
 		"total_distance" : "20",
 		"trail_event_trail_event_id" : 10,
-		"long_name" : "Trail 20",
+		"long_name" : "Trail 20"
 	},
 	{
 		"competition_id" : 27,
@@ -37,7 +37,7 @@
 		"year" : "2015",
 		"total_distance" : "115",
 		"trail_event_trail_event_id" : 16,
-		"long_name" : "Ultra Trail 115",
+		"long_name" : "Ultra Trail 115"
 	},
 	{
 		"competition_id" : 28,
@@ -45,7 +45,7 @@
 		"year" : "2015",
 		"total_distance" : "85",
 		"trail_event_trail_event_id" : 16,
-		"long_name" : "Ultra Trail 85",
+		"long_name" : "Ultra Trail 85"
 	},
 	{
 		"competition_id" : 29,
@@ -53,7 +53,7 @@
 		"year" : "2015",
 		"total_distance" : "40",
 		"trail_event_trail_event_id" : 16,
-		"long_name" : "Trail 40",
+		"long_name" : "Trail 40"
 	},
 	{
 		"competition_id" : 30,
@@ -61,7 +61,7 @@
 		"year" : "2015",
 		"total_distance" : "17",
 		"trail_event_trail_event_id" : 16,
-		"long_name" : "Trail 17",
+		"long_name" : "Trail 17"
 	},
 	{
 		"competition_id" : 49,
@@ -69,7 +69,7 @@
 		"year" : "2016",
 		"total_distance" : "115",
 		"trail_event_trail_event_id" : 23,
-		"long_name" : "MIUT",
+		"long_name" : "MIUT"
 	},
 	{
 		"competition_id" : 50,
@@ -77,7 +77,7 @@
 		"year" : "2016",
 		"total_distance" : "85",
 		"trail_event_trail_event_id" : 23,
-		"long_name" : "Ultra",
+		"long_name" : "Ultra"
 	},
 	{
 		"competition_id" : 51,
@@ -85,7 +85,7 @@
 		"year" : "2016",
 		"total_distance" : "43",
 		"trail_event_trail_event_id" : 23,
-		"long_name" : "Marathon",
+		"long_name" : "Marathon"
 	},
 	{
 		"competition_id" : 52,
@@ -93,7 +93,7 @@
 		"year" : "2016",
 		"total_distance" : "17",
 		"trail_event_trail_event_id" : 23,
-		"long_name" : "Mini",
+		"long_name" : "Mini"
 	},
 	{
 		"competition_id" : 95,
@@ -101,7 +101,7 @@
 		"year" : "2017",
 		"total_distance" : "115",
 		"trail_event_trail_event_id" : 42,
-		"long_name" : "MIUT",
+		"long_name" : "MIUT"
 	},
 	{
 		"competition_id" : 96,
@@ -109,7 +109,7 @@
 		"year" : "2017",
 		"total_distance" : "85",
 		"trail_event_trail_event_id" : 42,
-		"long_name" : "Ultra",
+		"long_name" : "Ultra"
 	},
 	{
 		"competition_id" : 97,
@@ -117,7 +117,7 @@
 		"year" : "2017",
 		"total_distance" : "43",
 		"trail_event_trail_event_id" : 42,
-		"long_name" : "Marathon",
+		"long_name" : "Marathon"
 	},
 	{
 		"competition_id" : 98,
@@ -125,7 +125,7 @@
 		"year" : "2017",
 		"total_distance" : "17",
 		"trail_event_trail_event_id" : 42,
-		"long_name" : "Mini",
+		"long_name" : "Mini"
 	},
 	{
 		"competition_id" : 166,
@@ -133,7 +133,7 @@
 		"year" : "2018",
 		"total_distance" : "115",
 		"trail_event_trail_event_id" : 69,
-		"long_name" : "MIUT",
+		"long_name" : "MIUT"
 	},
 	{
 		"competition_id" : 167,
@@ -141,7 +141,7 @@
 		"year" : "2018",
 		"total_distance" : "85",
 		"trail_event_trail_event_id" : 69,
-		"long_name" : "Ultra",
+		"long_name" : "Ultra"
 	},
 	{
 		"competition_id" : 168,
@@ -149,7 +149,7 @@
 		"year" : "2018",
 		"total_distance" : "42",
 		"trail_event_trail_event_id" : 69,
-		"long_name" : "Marathon",
+		"long_name" : "Marathon"
 	},
 	{
 		"competition_id" : 169,
@@ -157,6 +157,6 @@
 		"year" : "2018",
 		"total_distance" : "16",
 		"trail_event_trail_event_id" : 69,
-		"long_name" : "Mini",
+		"long_name" : "Mini"
   }
 ]
