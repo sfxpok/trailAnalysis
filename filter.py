@@ -80,9 +80,7 @@ def createOrderedBoard(df): # change this name
 def getFilter(filterArg, numberOfAthletes, athleteIDs, dfFiltered, df):
     # import every athlete from a competition to a dataframe
     if (filterArg == "-f"): # first X
-
-        sumAllAthleteCPTime(df)
-
+        #createOrderedBoard(df) to be tested
         filteredAthleteIDs = athleteIDs[:numberOfAthletes]
     elif (filterArg == "-l"): # last X
         filteredAthleteIDs = athleteIDs[-numberOfAthletes:]
