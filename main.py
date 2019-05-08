@@ -16,6 +16,9 @@ def main():
 
     athleteIDs = df['inscription_athlete_athlete_id'].unique()
 
+    if (sys.argv[1] == '-q'):
+        filter.getFilter('-q', 0, athleteIDs, df, 0)
+
     if len(sys.argv) == 1:
         quantityArg = input('Quantos atletas?: ')
         plot.createPlots(filter.getFilter('-r', int(quantityArg), athleteIDs, df), df)

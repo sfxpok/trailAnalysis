@@ -78,7 +78,14 @@ def createOrderedBoard(df): # change this name
     # if you want athletes in the last places, just reverse the data
     # dfFiltered = dfFiltered.iloc[::-1]
 
-    return dfFiltered    
+    return dfFiltered   
+
+#def cleanAthleteID():
+#    oldID = 
+#    newID = 
+#
+#    df.loc[df.inscription_athlete_athlete_id == 1304, 'inscription_athlete_athlete_id'] = 116659
+#    df.loc[df['inscription_athlete_athlete_id'] == 1304]
 
 def getFilter(filterArg, numberOfAthletes, athleteIDs, dfFiltered, df):
     # import every athlete from a competition to a dataframe
@@ -106,6 +113,19 @@ def getFilter(filterArg, numberOfAthletes, athleteIDs, dfFiltered, df):
 
         #athleteIDs = filterArg['echelon'] = filterEchelon
         filteredAthleteIDs = random.sample(list(athleteIDs), numberOfAthletes)
+    elif (filterArg == '-q'): # quartiles
+        filterFirstQuartile = input("Insira o primeiro quartil. Exemplo: 0.25\n")
+        filterSecondQuartile = input("Insira o segundo quartil. Exemplo: 0.50\n")
+        filterThirdQuartile = input("Insira o terceiro quartil. Exemplo: 0.75\n")
+
+        dfFiltered = dfFiltered.drop(dfFiltered[dfFiltered.Checkpoint == 18].index) # remove datetimes with 00:00:00
+        CPTimeDateTime = pd.to_datetime(dfFiltered['CPTime'])
+
+        globalPerformanceQuartiles = CPTimeDateTime.quantile([float(filterFirstQuartile), float(filterSecondQuartile), float(filterThirdQuartile)])
+        print(globalPerformanceQuartiles)
+
+        #input("placeholder")
+
     else: # do not execute script
         print("Filtro desconhecido. Ler documentação.")
         sys.exit(1)
