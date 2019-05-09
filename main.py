@@ -1,7 +1,7 @@
 import pandas as pd
 import sys
 
-import filter, plot
+import filter, plot, io_op
 
 def main():
 
@@ -17,7 +17,8 @@ def main():
     athleteIDs = df['inscription_athlete_athlete_id'].unique()
 
     if (sys.argv[1] == '-q'):
-        filter.getFilter('-q', 0, athleteIDs, df, 0)
+        io_op.writeToCSVFile(filter.getFilter('-q', 0, athleteIDs, df, 0), filterCompetition, filterYearComp)
+        sys.exit(0)
 
     if len(sys.argv) == 1:
         quantityArg = input('Quantos atletas?: ')

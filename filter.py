@@ -119,10 +119,16 @@ def getFilter(filterArg, numberOfAthletes, athleteIDs, dfFiltered, df):
         filterThirdQuartile = input("Insira o terceiro quartil. Exemplo: 0.75\n")
 
         dfFiltered = dfFiltered.drop(dfFiltered[dfFiltered.Checkpoint == 18].index) # remove datetimes with 00:00:00
+        dfFiltered = dfFiltered.drop(dfFiltered[dfFiltered.Checkpoint == 325].index)
+        dfFiltered = dfFiltered.drop(dfFiltered[dfFiltered.Checkpoint == 35].index)
         CPTimeDateTime = pd.to_datetime(dfFiltered['CPTime'])
 
+        globalPerformanceAverage = CPTimeDateTime.resample().mean()
         globalPerformanceQuartiles = CPTimeDateTime.quantile([float(filterFirstQuartile), float(filterSecondQuartile), float(filterThirdQuartile)])
         print(globalPerformanceQuartiles)
+        print(globalPerformanceAverage)
+
+        return globalPerformanceQuartiles
 
         #input("placeholder")
 
