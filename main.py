@@ -9,8 +9,8 @@ def main():
 
     df = pd.read_csv(configfile.loc[0, 'csvfile']) # read CSV file
 
-    filterCompetition = input("Qual é a competição? MIUT/ULTRA/Marathon/Mini")
-    filterYearComp = input("Qual é o ano da competição?")
+    filterCompetition = input("Qual é a competição? MIUT/ULTRA/Marathon/Mini\n")
+    filterYearComp = input("Qual é o ano da competição?\n")
     
     df = filter.competitionFilter(df, filterCompetition, filterYearComp)
 
