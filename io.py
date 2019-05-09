@@ -4,4 +4,4 @@ def writeToCSVFile(data, compName, yearNumber):
 
     csvFileName = compName + "_" + str(yearNumber) + "_" + "quartiles.csv"
 
-    data.to_csv(path_or_buf=csvFileName, index=False)
+    data.to_csv(path_or_buf=csvFileName)
