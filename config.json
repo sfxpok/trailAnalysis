@@ -1,5 +1,11 @@
-[
-    {
+{
+    "csv-settings": {
         "csvfile": "MIUT2014-2018_temposEdistancias.csv"
+    },
+
+    "quartile-settings": {
+        "firstQuartile": 0.25,
+        "secondQuartile": 0.5,
+        "thirdQuartile": 0.75
     }
-]
+}

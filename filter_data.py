@@ -3,6 +3,8 @@ import sys
 import pandas as pd
 from statistics import mean
 
+import clean_data
+
 # function for linear regression
 
 def best_fit_slope_and_intercept(xs, ys):
@@ -114,23 +116,17 @@ def getFilter(filterArg, numberOfAthletes, athleteIDs, dfFiltered, df):
         #athleteIDs = filterArg['echelon'] = filterEchelon
         filteredAthleteIDs = random.sample(list(athleteIDs), numberOfAthletes)
     elif (filterArg == '-q'): # quartiles
-        filterFirstQuartile = input("Insira o primeiro quartil. Exemplo: 0.25\n")
-        filterSecondQuartile = input("Insira o segundo quartil. Exemplo: 0.50\n")
-        filterThirdQuartile = input("Insira o terceiro quartil. Exemplo: 0.75\n")
+        firstQuartile = input("Insira o primeiro quartil. Exemplo: 0.25\n")
+        secondQuartile = input("Insira o segundo quartil. Exemplo: 0.50\n")
+        thirdQuartile = input("Insira o terceiro quartil. Exemplo: 0.75\n")
 
-        dfFiltered = dfFiltered.drop(dfFiltered[dfFiltered.Checkpoint == 18].index) # remove datetimes with 00:00:00
-        dfFiltered = dfFiltered.drop(dfFiltered[dfFiltered.Checkpoint == 325].index)
-        dfFiltered = dfFiltered.drop(dfFiltered[dfFiltered.Checkpoint == 35].index)
+        dfFiltered = clean_data.dropStartCPTimes(dfFiltered)
         CPTimeDateTime = pd.to_datetime(dfFiltered['CPTime'])
 
-        #globalPerformanceAverage = CPTimeDateTime.resample().mean()
-        globalPerformanceQuartiles = CPTimeDateTime.quantile([float(filterFirstQuartile), float(filterSecondQuartile), float(filterThirdQuartile)])
+        globalPerformanceQuartiles = CPTimeDateTime.quantile([float(firstQuartile), float(secondQuartile), float(thirdQuartile)])
         print(globalPerformanceQuartiles)
-        #print(globalPerformanceAverage)
 
         return globalPerformanceQuartiles
-
-        #input("placeholder")
 
     else: # do not execute script
         print("Filtro desconhecido. Ler documentação.")

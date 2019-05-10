@@ -20,21 +20,28 @@ def main():
         io_op.writeToCSVFile(filter_data.getFilter('-q', 0, athleteIDs, df, 0), filterCompetition, filterYearComp)
 
     if args.reglin:
+
+        if not (args.first or args.last or args.random):
+            print("Está em falta um argumento referente à ordem dos atletas. A sair do programa...")
+            sys.exit(1)
+
         numOfAthletes = getNumberOfAthletes()
         typeOfOrder = getTypeOfOrder()
-        plot.createPlots(filter_data.getFilter(typeOfOrder, numOfAthletes, athleteIDs, df), df)
+        plot.createPlots(filter_data.getFilter(typeOfOrder, numOfAthletes, athleteIDs, df, 0), df)
 
     sys.exit(0) # shut down
 
 def getTypeOfOrder():
-    if args.first:
-        typeOfOrder = 'f'
-    elif args.last:
-        typeOfOrder = 'l'
-    elif args.random:
-        typeOfOrder = 'r'
+    args = getArgs()
 
-    return chr(typeOfOrder)
+    if args.first:
+        typeOfOrder = '-f'
+    elif args.last:
+        typeOfOrder = '-l'
+    elif args.random:
+        typeOfOrder = '-r'
+
+    return typeOfOrder
 
 def getDataSet():
     configfile = pd.read_json("config.json")
@@ -61,12 +68,8 @@ def getArgs():
     try:
         return parser.parse_args()
     except IOError:
-        parser.error(str(msg))
-    #args.method(**vars(args))
-
-    #if not (args.process or args.upload):
-        #parser.error('No action requested.')
+        print('Algo correu mal na leitura dos argumentos. A sair do programa...')
+        sys.exit(1)
 
 if __name__ == '__main__':
-    #getArgs()
     main()
