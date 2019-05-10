@@ -4,7 +4,7 @@ import pandas as pd
 import sys
 from sklearn import datasets, linear_model
 
-import filter
+import filter_data
 
 # time must be in seconds
 # distance must be in meters
@@ -44,7 +44,7 @@ def createPlots(filteredAthleteIDs, df):
         #regression_line = [] # clean array, this is important
         #regression_line = [(m*x)+b for x in Xdist]
 
-        regression_line = filter.regressionLineCalculate(Xdist, Ytime)
+        regression_line = filter_data.regressionLineCalculate(Xdist, Ytime)
 
         # scatter plot; X: distance traveled; Y: time passed
         ax = plt.subplot()
@@ -64,7 +64,7 @@ def cleanDataToPlot(athleteID, df):
 
     CPTimeInt64 = pd.DatetimeIndex(athleteData['CPTime']) # datatype conversion
 
-    athleteData['CPTimeSeconds'] = filter.convertTimeToSeconds(CPTimeInt64)
+    athleteData['CPTimeSeconds'] = filter_data.convertTimeToSeconds(CPTimeInt64)
 
     return athleteData
 
@@ -92,7 +92,7 @@ def multiplePlotting(filteredAthleteIDs, df):
         Ytime = tempAthleteData['CPTimeSeconds']
         competitionID = tempAthleteData.iloc[0]['Competition']
 
-        regression_line = filter.regressionLineCalculate(Xdist, Ytime)
+        regression_line = filter_data.regressionLineCalculate(Xdist, Ytime)
         competitionLabel = getCompetitionLabel(competitionID)
 
         ax = plt.subplot()
