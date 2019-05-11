@@ -43,10 +43,15 @@ def getTypeOfOrder():
 
     return typeOfOrder
 
-def getDataSet():
-    configfile = pd.read_json("config.json")
+def getConfigSettings():
+    configFile = pd.read_json("config.json")
 
-    df = pd.read_csv(configfile.loc[0, 'csvfile']) # read CSV file
+    return configFile
+
+def getDataSet():
+    configFile = getConfigSettings()
+
+    df = pd.read_csv(configFile.loc['csvfile', 'csv-settings']) # read CSV file
 
     return df
 

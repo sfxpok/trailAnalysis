@@ -3,7 +3,7 @@ import sys
 import pandas as pd
 from statistics import mean
 
-import clean_data
+import clean_data, main
 
 # function for linear regression
 
@@ -116,9 +116,12 @@ def getFilter(filterArg, numberOfAthletes, athleteIDs, dfFiltered, df):
         #athleteIDs = filterArg['echelon'] = filterEchelon
         filteredAthleteIDs = random.sample(list(athleteIDs), numberOfAthletes)
     elif (filterArg == '-q'): # quartiles
-        firstQuartile = input("Insira o primeiro quartil. Exemplo: 0.25\n")
-        secondQuartile = input("Insira o segundo quartil. Exemplo: 0.50\n")
-        thirdQuartile = input("Insira o terceiro quartil. Exemplo: 0.75\n")
+
+        configFile = main.getConfigSettings()
+
+        firstQuartile = configFile.loc['firstQuartile', 'quartile-settings']
+        secondQuartile = configFile.loc['secondQuartile', 'quartile-settings']
+        thirdQuartile = configFile.loc['thirdQuartile', 'quartile-settings']
 
         dfFiltered = clean_data.dropStartCPTimes(dfFiltered)
         CPTimeDateTime = pd.to_datetime(dfFiltered['CPTime'])
