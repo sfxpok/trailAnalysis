@@ -89,6 +89,13 @@ def createOrderedBoard(df): # change this name
 #    df.loc[df.inscription_athlete_athlete_id == 1304, 'inscription_athlete_athlete_id'] = 116659
 #    df.loc[df['inscription_athlete_athlete_id'] == 1304]
 
+#def orderDataSet(filterArg, dfFiltered):
+#    if (filterArg == "-f")
+#        dfFiltered = dfFiltered.drop(dfFiltered[dfFiltered.distancia_mapa != 0].index)
+#        #dfFiltered.sort_values(by='distancia_mapa')
+#
+#    return dfFiltered
+
 def getFilter(filterArg, numberOfAthletes, athleteIDs, dfFiltered, df):
     # import every athlete from a competition to a dataframe
     if (filterArg == "-f"): # first X

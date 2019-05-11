@@ -14,7 +14,8 @@ def main():
     
     df = filter_data.competitionFilter(df, filterCompetition, filterYearComp)
 
-    athleteIDs = df['inscription_athlete_athlete_id'].unique()
+    dfOrdered = df.drop(df[df.distancia_mapa != df['distancia_mapa'].max()].index)
+    athleteIDs = dfOrdered['inscription_athlete_athlete_id'].unique()
 
     if args.quart:
         io_op.writeToCSVFile(filter_data.getFilter('-q', 0, athleteIDs, df, 0), filterCompetition, filterYearComp)
