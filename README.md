@@ -1,17 +1,21 @@
 ### Usage
 
 ```
-python3 tkdk.py [-filter] [numberOfPeople]
+python3 main.py [-analysisMethod] [-typeOfOrder]
 ```
 
-Available options for ```-filter```:
+Available options for ```-analysisMethod```:
 
-- -f (fetch first ```numberOfPeople``` rows)
-- -l (fetch last ```numberOfPeople``` rows)
-- -r (fetch random ```numberOfPeople``` rows)
-- -q (calculate global performance of a competition through quartiles)
+- -reglin (linear regression (best-fit))
+- -quart (quartiles)
 
-```numberOfPeople``` argument can only be an positive integer.
+Available options for ```-typeOfOrder```:
+
+- -first (fetch top ranked athletes)
+- -last (fetch last ranked athletes)
+- -random (fetch random athletes)
+
+Run ```python3 main.py -h``` for more information.
 
 ### Dependencies
 
