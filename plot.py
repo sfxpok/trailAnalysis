@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import sys
-from sklearn import datasets, linear_model
 
 import filter_data
 

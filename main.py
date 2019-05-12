@@ -9,6 +9,22 @@ def main():
 
     df = getDataSet()
 
+    if args.multRuns:
+
+        athleteIDsVariousComps = []
+        insertingData = 1
+
+        while (insertingData):
+            athleteID = int(input("Insira o ID do atleta com várias participações (insire 0 para terminar a inserção)\n"))
+
+            if athleteID != 0:
+                athleteIDsVariousComps.append(athleteID)
+            else:
+                insertingData = 0
+
+        plot.multiplePlotting(athleteIDsVariousComps, df)
+        sys.exit(0) # shut down
+
     filterCompetition = input("Qual é a competição? MIUT/ULTRA/Marathon/Mini\n")
     filterYearComp = input("Qual é o ano da competição?\n")
     
@@ -21,7 +37,6 @@ def main():
         io_op.writeToCSVFile(filter_data.getFilter('-q', 0, athleteIDs, df, 0), filterCompetition, filterYearComp)
 
     if args.reglin:
-
         if not (args.first or args.last or args.random):
             print("Está em falta um argumento referente à ordem dos atletas. A sair do programa...")
             sys.exit(1)
@@ -70,6 +85,8 @@ def getArgs():
     parser.add_argument('-first', action='store_true', help='primeiros X atletas classificados')
     parser.add_argument('-last', action='store_true', help='últimos X atletas classificados')
     parser.add_argument('-random', action='store_true', help='X atletas aleatórios')
+
+    parser.add_argument('-multRuns', action='store_true', help='atleta com várias participações (método: reg. linear)')
     
     try:
         return parser.parse_args()
