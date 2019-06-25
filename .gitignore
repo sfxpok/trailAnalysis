@@ -2,4 +2,6 @@
 *.csv
 *.vscode
 *.zip
+*.log
 *__pycache__
+databaseCredentials.py

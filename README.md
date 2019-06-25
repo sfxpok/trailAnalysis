@@ -21,4 +21,4 @@ Run ```python3 main.py -h``` for more information.
 
 - NumPy
 - pandas
-- scikit-learn
+- matplotlib

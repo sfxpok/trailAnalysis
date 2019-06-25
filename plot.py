@@ -52,8 +52,11 @@ def createPlots(filteredAthleteIDs, df):
         ax.plot(Xdist, regression_line, color="red")
         ax.set_xlabel('distância percorrida (metros)')
         ax.set_ylabel('tempo passado (segundos)')
-        plt.xlim(0, 120000)
-        plt.ylim(0, 80000)
+        plt.xlim(setXAxisLimits(Xdist, 1), setXAxisLimits(Xdist, 0))
+        plt.ylim(setYAxisLimits(Ytime, 1), setYAxisLimits(Ytime, 0))
+        #plt.xlim(0, 120000)
+        #plt.ylim(0, 120000)
+        #plt.ylim(0, 80000)
         #plt.autoscale(enable=True)
         plt.savefig(str(athlete) + '_xDistance_yTime')
 
@@ -101,7 +104,7 @@ def multiplePlotting(filteredAthleteIDs, df):
         ax.scatter(Xdist, Ytime, label = competitionLabel)
         ax.plot(Xdist, regression_line)
         ax.set_xlabel('distância percorrida (metros)')
-        ax.set_ylabel('tempo passado (segundos)')
+        ax.set_ylabel('tempo passado (segundos)')        
         plt.xlim(0, 120000)
         plt.ylim(0, 80000)
 
@@ -109,25 +112,39 @@ def multiplePlotting(filteredAthleteIDs, df):
     plt.savefig("testingMultPlot")
     plt.show()
 
-def setXAxisLimits(maxDistance):
+def setXAxisLimits(distance, getMinLimit):
     # x axis limit: max distance (in meters) from the dataset
 
-    maxDistance = maxDistance.max()
-    maxDistanceDigits = len(str(abs(maxDistance)))
-    roundingMaxDistancePrecision = maxDistanceDigits - 1
-    xMaxAxisLimit = round(maxDistance, roundingMaxDistancePrecision) # i.e. round(116200, 4) = 120000
+    if (getMinLimit):
+        distance = distance.min()
+    else:
+        distance = distance.max()
 
-    return xMaxAxisLimit
+    distanceDigits = len(str(abs(distance)))
+    roundingDistancePrecision = distanceDigits - 1
+    xDistanceAxisLimit = round(distance, roundingDistancePrecision) # i.e. round(116200, 4) = 120000
 
-def setYAxisLimits(CPTimeSeconds):
+    if (getMinLimit == False):
+        xDistanceAxisLimit += 5000
+
+    return xDistanceAxisLimit
+
+def setYAxisLimits(CPTimeSeconds, getMinLimit):
     # y axis limit: max time (in seconds) from the dataset
 
-    maxTime = CPTimeSeconds.max()
-    maxTimeDigits = len(str(abs(maxTime)))
-    roundingMaxTimePrecision = maxTimeDigits - 1
-    yMaxAxisLimit = round(maxTime, roundingMaxTimePrecision)
+    if (getMinLimit):
+        CPTimeSeconds = CPTimeSeconds.min()
+    else:
+        CPTimeSeconds = CPTimeSeconds.max()
 
-    return yMaxAxisLimit
+    CPTimeDigits = len(str(abs(CPTimeSeconds)))
+    roundingCPTimePrecision = CPTimeDigits - 1
+    yCPTimeAxisLimit = round(CPTimeSeconds, roundingCPTimePrecision)
+
+    if (getMinLimit == False):
+        yCPTimeAxisLimit += 5000
+
+    return yCPTimeAxisLimit
 
 
 def getAthletesManually():
