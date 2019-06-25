@@ -53,7 +53,7 @@ def createPlots(filteredAthleteIDs, df):
         ax.set_xlabel('distância percorrida (metros)')
         ax.set_ylabel('tempo passado (segundos)')
         plt.xlim(setXAxisLimits(Xdist, 1), setXAxisLimits(Xdist, 0))
-        plt.ylim(setYAxisLimits(Ytime, 1), setYAxisLimits(Ytime, 0))
+        plt.ylim(setYAxisLimits(Ytime, 1), getLongestCPTime(df))
         #plt.xlim(0, 120000)
         #plt.ylim(0, 120000)
         #plt.ylim(0, 80000)
@@ -61,6 +61,17 @@ def createPlots(filteredAthleteIDs, df):
         plt.savefig(str(athlete) + '_xDistance_yTime')
 
         #plt.show()
+
+def getLongestCPTime(df):
+    dfLastAthlete = df.tail(1)
+
+    longestCPTimeInt64 = pd.DatetimeIndex(dfLastAthlete['CPTime']) # datatype conversion
+    longestCPTimeSeconds = filter_data.convertTimeToSeconds(longestCPTimeInt64)
+    longestCPTimeSeconds = max(longestCPTimeSeconds)
+    
+    longestCPTimeSeconds += 5000 # give an additional space in the Y axis
+
+    return longestCPTimeSeconds
 
 def cleanDataToPlot(athleteID, df):
     athleteData = df[df['inscription_athlete_athlete_id'] == int(athleteID)]
