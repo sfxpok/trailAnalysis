@@ -64,8 +64,14 @@ def createPlots(filteredAthleteIDs, df):
 
 def getLongestCPTime(df):
     dfLastAthlete = df.tail(1)
+    dfLastAthlete = df[df['inscription_athlete_athlete_id'] == int(dfLastAthlete['inscription_athlete_athlete_id'])]
+
+    print(dfLastAthlete)
 
     longestCPTimeInt64 = pd.DatetimeIndex(dfLastAthlete['CPTime']) # datatype conversion
+    
+    print(longestCPTimeInt64)
+    
     longestCPTimeSeconds = filter_data.convertTimeToSeconds(longestCPTimeInt64)
     longestCPTimeSeconds = max(longestCPTimeSeconds)
     

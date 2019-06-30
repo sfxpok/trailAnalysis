@@ -41,6 +41,9 @@ def convertTimeToSeconds(checkPointTime):
     CPTimeSeconds = []
 
     for i in range(len(checkPointTime.day)):
+
+        #print(checkPointTime)
+
         if (i > 0 and i < len(checkPointTime.day)) and (checkPointTime.day[i] != startDay):
             CPTimeSeconds.append(checkPointTime.hour[i] * 3600 + checkPointTime.minute[i] * 60 + checkPointTime.second[i] + startTimeToMidnightInSeconds) # hhmmss to seconds
         else:
