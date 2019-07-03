@@ -34,9 +34,13 @@ def regressionLineCalculate(X, Y):
 
 def convertTimeToSeconds(checkPointTime):
     startTime = checkPointTime.hour[0]
-    startTimeToMidnightInSeconds = 60*60*(24-startTime)
+    oneDayInSeconds = 60*60*24
+
+    #print(oneDayInSeconds)    
 
     startDay = checkPointTime.day[0]
+
+    #print(startDay)
 
     CPTimeSeconds = []
 
@@ -44,10 +48,14 @@ def convertTimeToSeconds(checkPointTime):
 
         #print(checkPointTime)
 
-        if (i > 0 and i < len(checkPointTime.day)) and (checkPointTime.day[i] != startDay):
-            CPTimeSeconds.append(checkPointTime.hour[i] * 3600 + checkPointTime.minute[i] * 60 + checkPointTime.second[i] + startTimeToMidnightInSeconds) # hhmmss to seconds
+        if (checkPointTime.day[i] != startDay):
+            CPTimeSeconds.append(checkPointTime.hour[i] * 3600 + checkPointTime.minute[i] * 60 + checkPointTime.second[i] + oneDayInSeconds) # hhmmss to seconds
+            #print("DIA SEGUINTE DA PROVA\n")
         else:
             CPTimeSeconds.append(checkPointTime.hour[i] * 3600 + checkPointTime.minute[i] * 60 + checkPointTime.second[i])
+            #print("DIA ATUAL DA PROVA\n")
+
+    print(CPTimeSeconds)
 
     return CPTimeSeconds
 
