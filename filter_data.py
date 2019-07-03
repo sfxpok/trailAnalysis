@@ -55,7 +55,7 @@ def convertTimeToSeconds(checkPointTime):
             CPTimeSeconds.append(checkPointTime.hour[i] * 3600 + checkPointTime.minute[i] * 60 + checkPointTime.second[i])
             #print("DIA ATUAL DA PROVA\n")
 
-    print(CPTimeSeconds)
+    #print(CPTimeSeconds)
 
     return CPTimeSeconds
 
