@@ -3,7 +3,7 @@ import sys
 import pandas as pd
 from statistics import mean
 
-import clean_data, main
+import clean_data, main, plot
 
 # function for linear regression
 
@@ -142,10 +142,14 @@ def getFilter(filterArg, numberOfAthletes, athleteIDs, dfFiltered, df):
         thirdQuartile = configFile.loc['thirdQuartile', 'quartile-settings']
 
         dfFiltered = clean_data.dropStartCPTimes(dfFiltered)
+        dfFiltered = dfFiltered.loc[dfFiltered['checkpoint_order'] == dfFiltered.checkpoint_order.max()] # quartiles calculated for finish line
+
         CPTimeDateTime = pd.to_datetime(dfFiltered['CPTime'])
 
         globalPerformanceQuartiles = CPTimeDateTime.quantile([float(firstQuartile), float(secondQuartile), float(thirdQuartile)])
         print(globalPerformanceQuartiles)
+
+        #plot.plotQuartiles(globalPerformanceQuartiles)
 
         return globalPerformanceQuartiles
 

@@ -146,6 +146,17 @@ def multiplePlotting(filteredAthleteIDs, df):
     plt.savefig("testingMultPlot")
     plt.show()
 
+def plotQuartiles(globalPerformanceQuartiles):
+
+    for val in globalPerformanceQuartiles.iteritems():
+        print(val)
+
+    test = globalPerformanceQuartiles.to_numpy()
+    print(test)
+
+    globalPerformanceQuartiles.plot(kind='box')
+
+
 def setXAxisLimits(distance, getMinLimit):
     # x axis limit: max distance (in meters) from the dataset
 
