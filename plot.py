@@ -18,7 +18,7 @@ def createPlots(filteredAthleteIDs, df):
 
         # NOTA: Podem haver atletas que não foram registados em alguns CPs
 
-        tempAthleteData = cleanDataToPlot(athlete, df)
+        tempAthleteData = cleanDataToPlot(1, athlete, df)
 
         #tempAthleteData = df[df['inscription_athlete_athlete_id'] == int(athlete)]
         #tempAthleteData.iloc[-1, tempAthleteData.columns.get_loc('checkpoint_order')] = 14
@@ -79,8 +79,15 @@ def getLongestCPTime(df):
 
     return longestCPTimeSeconds
 
-def cleanDataToPlot(athleteID, df):
-    athleteData = df[df['inscription_athlete_athlete_id'] == int(athleteID)]
+# athleteOrCompetition set to 0 means the ID must be related to competition ID
+# athleteOrCompetition set to 1 means the ID must be related to athlete ID
+def cleanDataToPlot(athleteOrCompetition, ID, df):
+
+    if (athleteOrCompetition):
+        athleteData = df[df['inscription_athlete_athlete_id'] == int(ID)]
+    else:
+        athleteData = df[df['Competition'] == int(ID)]
+    
     athleteData.iloc[-1, athleteData.columns.get_loc('checkpoint_order')] = 14 # last checkpoint has got ID 99
 
     CPTimeInt64 = pd.DatetimeIndex(athleteData['CPTime']) # datatype conversion
@@ -99,6 +106,13 @@ def getCompetitionLabel(competitionID):
 
     return competitionLabel
 
+def getAdequateCompetitions(tempAthleteData):
+    tempCompetitionData = tempAthleteData.sort_values('distancia_mapa', ascending=False).drop_duplicates(['Competition'])
+    tempCompetitionData = tempCompetitionData.drop(tempCompetitionData[tempCompetitionData.distancia_mapa < tempCompetitionData.distancia_mapa.max() - 1000].index)
+    
+    cond = tempAthleteData['Competition'].isin(tempCompetitionData['Competition']) == False
+    tempAthleteData.drop(tempAthleteData[cond].index, inplace = True)
+
 def multiplePlotting(filteredAthleteIDs, df):
 
     Xdist = []
@@ -106,12 +120,15 @@ def multiplePlotting(filteredAthleteIDs, df):
 
     for athlete in filteredAthleteIDs:
 
-        print("### Processing athlete number: " + str(athlete) + " ###")
+        print("### Processing competition number: " + str(athlete) + " ###")
 
-        tempAthleteData = cleanDataToPlot(athlete, df)
+        tempAthleteData = cleanDataToPlot(1, athlete, df)
+
+        getAdequateCompetitions(tempAthleteData)
 
         Xdist = tempAthleteData['distancia_acumulada']
         Ytime = tempAthleteData['CPTimeSeconds']
+
         competitionID = tempAthleteData.iloc[0]['Competition']
 
         regression_line = filter_data.regressionLineCalculate(Xdist, Ytime)
