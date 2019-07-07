@@ -5,11 +5,15 @@ import argparse
 import filter_data, plot, io_op
 
 def main():
+    """Main function of the program, it checks which argument was
+    picked and it collects the dataset chosen in the config file
+    """
+
     args = getArgs()
 
     df = getDataSet()
 
-    if args.multRuns:
+    if args.multRuns: # THIS IS NOT WORKING
 
         athleteIDsVariousComps = []
         insertingData = 1
@@ -34,20 +38,43 @@ def main():
     athleteIDs = dfOrdered['inscription_athlete_athlete_id'].unique()
 
     if args.quart:
-        io_op.writeToCSVFile(filter_data.getFilter('-q', 0, athleteIDs, df, 0), filterCompetition, filterYearComp)
+        
+        # initial dataset goes through a set of filters, but the second
+        # and fifth argument in the function getFilter() do not matter
+        # for this method of analysis
+        dfFiltered = filter_data.getFilter('-q', None, athleteIDs, df)
+
+        # outputs a csv file with the results of the quartiles
+        io_op.writeToCSVFile(dfFiltered, filterCompetition, filterYearComp)
 
     if args.reglin:
         if not (args.first or args.last or args.random):
             print("Está em falta um argumento referente à ordem dos atletas. A sair do programa...")
             sys.exit(1)
 
+        # fetches number of athletes through a user input
         numOfAthletes = getNumberOfAthletes()
-        typeOfOrder = getTypeOfOrder()
-        plot.createPlots(filter_data.getFilter(typeOfOrder, numOfAthletes, athleteIDs, df, 0), df)
 
-    sys.exit(0) # shut down
+        # fetches type of ranking order
+        typeOfOrder = getTypeOfOrder()
+
+        # generates plots with linear regression
+        dfFiltered = filter_data.getFilter(typeOfOrder, numOfAthletes, athleteIDs, df)
+        plot.createPlots(dfFiltered, df)
+
+    sys.exit(0) # shut down, everything is done
 
 def getTypeOfOrder():
+    """Verifies chosen argument to order the dataset of athletes
+    
+    Returns
+    -------
+    typeOfOrder
+        flag with the set of ordered ranked athletes
+    """
+
+    # fetches input arguments before runtime to get the order of
+    # ranked athletes
     args = getArgs()
 
     if args.first:
@@ -60,23 +87,56 @@ def getTypeOfOrder():
     return typeOfOrder
 
 def getConfigSettings():
+    """Fetches and loads configuration parameters from a file (config.json)
+    
+    Returns
+    -------
+    configFile
+        loaded configuration data from config.json
+    """
+
     configFile = pd.read_json("config.json")
 
     return configFile
 
 def getDataSet():
+    """Imports and loads a CSV file as a dataset to be analyzed
+    
+    Returns
+    -------
+    df
+        a pandas dataframe with the whole file's data
+    """
+
     configFile = getConfigSettings()
 
-    df = pd.read_csv(configFile.loc['csvfile', 'csv-settings']) # read CSV file
+    # reads a configured CSV file in the config.json file settings
+    df = pd.read_csv(configFile.loc['csvfile', 'csv-settings'])
 
     return df
 
 def getNumberOfAthletes():
+    """Sends a prompt to the terminal and waits for an integer input
+    corresponding to the amount of athletes to analyze
+    
+    Returns
+    -------
+    numOfAthletes
+        number of athletes to analyze
+    """
+
     numOfAthletes = input('Quantos atletas?: ')
 
-    return int(numOfAthletes)
+    return int(numOfAthletes) # it must return the number of athletes as an integer
 
 def getArgs():
+    """Parses any given argument and stores them to be used later on
+    
+    Returns
+    -------
+    parse_args()
+        keeps any given arguments stored during runtime
+    """
 
     parser = argparse.ArgumentParser(description='Projeto Análise de Dados de Trails 2019')
     parser.add_argument('-reglin', action='store_true', help='regressão linear (best-fit)')

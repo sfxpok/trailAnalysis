@@ -35,6 +35,8 @@ cursor = mydb.cursor(buffered=True)
 # Id of one athlete
 
 def findAllDuplicateAthletes():
+    """Returns any rows containing duplicate athletes in the database
+    """
 
     arrayDuplicateAthletes = np.array([])
     arrayAthletesWithSmallestIDs = np.array([])
@@ -73,6 +75,7 @@ def findAllDuplicateAthletes():
     cursor.execute(getAthletesWithSmallestIDs)
     arrayAthletesWithSmallestIDs = cursor.fetchall()
 
+    # conversion was necessary to do operations on the array
     arrayAthletesWithSmallestIDs = convertToNumPyArray(arrayAthletesWithSmallestIDs)
 
     #print (arrayAthletesWithSmallestIDs)
@@ -81,6 +84,8 @@ def findAllDuplicateAthletes():
         athleteToKeep = dupRow[1]
         #print("Nome de atleta: " + str(athleteToKeep) + "\n")
 
+        # this if condition is only meant for parsing purposes with athletes
+        # that contain a ' in their names
         if "'" in str(athleteToKeep):
             positionToAddApostrophe = str(athleteToKeep.find("'"))
             athleteToKeep = str(athleteToKeep)[:int(positionToAddApostrophe)] + "'" + str(athleteToKeep)[int(positionToAddApostrophe):]
@@ -106,8 +111,15 @@ def findAllDuplicateAthletes():
         deleteTransaction(deleteDuplicateRows, seeDeletedDuplicateRows)
 
 def writeToLog(message, exceptionFlag):
-
-    #print (message)
+    """Writes a message error to a log
+    
+    Parameters
+    ----------
+    message : string
+        Contains a SQL message
+    exceptionFlag : integer
+        If the flag is 1, it means there's an error
+    """
 
     if (exceptionFlag):
         logFile = open("sqlexceptions.log", "a+")
@@ -119,6 +131,18 @@ def writeToLog(message, exceptionFlag):
     logFile.close()
 
 def executeTransaction(mydb, queryID):
+    """Executes a given transaction. It can be either an UPDATE or
+    DELETE query
+    
+    Parameters
+    ----------
+    mydb : database settings
+        Contains settings regarding to the database being used
+    queryID : integer
+        If the ID is 0, it's an UPDATE query. If the ID is 1,
+        it's a DELETE query
+    """
+
     mydb.commit()
 
     if (queryID == 0):
@@ -127,6 +151,16 @@ def executeTransaction(mydb, queryID):
         print ("########## Transacção feita. (DELETE) ##########")
 
 def updateTransaction(updateQuery, selectQuery):
+    """Executes an UPDATE query and it's transaction
+    
+    Parameters
+    ----------
+    updateQuery : string
+        UPDATE query
+    selectQuery : string
+        SELECT query
+    """
+
     #print ("*** UPDATING THE FOLLOWING ROWS ***")
 
     #print (selectQuery + "\n")
@@ -154,6 +188,16 @@ def updateTransaction(updateQuery, selectQuery):
     #print ("*** UPDATE DONE ***")
 
 def deleteTransaction(deleteQuery, selectQuery):
+    """Executes a DELETE query and it's transaction
+    
+    Parameters
+    ----------
+    deleteQuery : string
+        DELETE query
+    selectQuery : string
+        SELECT query
+    """
+
     #print("*** DELETING THE FOLLOWING ROWS ***")
 
     try:
@@ -177,6 +221,17 @@ def deleteTransaction(deleteQuery, selectQuery):
     #print ("*** DELETION DONE ***")
 
 def updateDuplicateID(keepAthID, dupAthIDArray):
+    """Executes various UPDATE transactions regarding the time checkpoints and
+    ID inscriptions
+
+    
+    Parameters
+    ----------
+    keepAthID : integer
+        Athlete ID to keep, usually means it is the smallest ID
+    dupAthIDArray : integer
+        Athlete IDs considered to be duplicates of the ID above (keepAthID)
+    """
 
     stringWithIDsToUpdate = parseArrayToString(dupAthIDArray)
 
@@ -192,6 +247,18 @@ def updateDuplicateID(keepAthID, dupAthIDArray):
     updateTransaction(updateDupIDstimecp, seeUpdatedDuplicateRows)
 
 def parseArrayToString(npArray):
+    """Parses an array with athlete IDs to a string
+    
+    Parameters
+    ----------
+    npArray : NumPy array
+        Contains a set of athlete IDs
+    
+    Returns
+    -------
+    string
+        Contains a set of athlete IDs
+    """
 
     stringWithID = ""
 
@@ -205,12 +272,33 @@ def parseArrayToString(npArray):
     return stringWithID
 
 def displayRowsOnTerminal(rowsToDisplay):
+    """Only for output purposes of data related to an athlete
+    
+    Parameters
+    ----------
+    rowsToDisplay : array
+        Athlete ID
+    """
 
     for dbrow in rowsToDisplay:
         #print ("AthID=%d\tName=%s\temail=%s\tbirthdate=%s" % (dbrow[0], dbrow[1], dbrow[2], dbrow[3]))
         print ("AthID=%d\t" % (dbrow[0]))
 
 def runSQLQuery(query):
+    """Executes a SQL query
+    
+    Parameters
+    ----------
+    query : string
+        SQL query
+    
+    Returns
+    -------
+    array
+        Output of the result from the SQL query
+    """
+
+
     cursor.execute(query)
     resultArray = cursor.fetchall()
     convertToNumPyArray(resultArray)
@@ -218,6 +306,20 @@ def runSQLQuery(query):
     return resultArray
 
 def convertToNumPyArray(oldArray):
+    """Converts an array to a NumPy array, meant to do other operations
+    in an array
+    
+    Parameters
+    ----------
+    oldArray : array
+        Array with athlete data
+    
+    Returns
+    -------
+    NumPy array
+        NumPy array with athlete data
+    """
+
     newArray = np.array(oldArray)
 
     return newArray
