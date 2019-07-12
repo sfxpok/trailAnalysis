@@ -6,11 +6,13 @@ import databaseCredentials
 import mysql.connector # to download this: sudo pip3 install mysql-connector
 import numpy as np
 
+# database credentials here
 db_address = databaseCredentials.login['db_address']
 username = databaseCredentials.login['username']
 password = databaseCredentials.login['password']
 db_name = databaseCredentials.login['db_name']
 
+# mysql connector to interact with the database "db_name"
 mydb = mysql.connector.connect(user=username, password=password,
                               host=db_address,
                               database=db_name)
@@ -59,6 +61,8 @@ def findAllDuplicateAthletes():
     # cursor.execute(getDuplicateAthletes)
     # arrayDuplicateAthletes = cursor.fetchall()
 
+    # get athletes with the smallest IDs. this will return athletes
+    # with IDs they got from their first inscription
     getAthletesWithSmallestIDs = ("SELECT \
                               MIN(athlete_id), \
                               name, \
@@ -80,7 +84,14 @@ def findAllDuplicateAthletes():
 
     #print (arrayAthletesWithSmallestIDs)
 
+    # handle rows that are known to be duplicates and this for cycle
+    # contains a set of instructions to do UPDATE and DELETE
+    # queries. these queries will delete duplicate athletes
+    # and update the checkpoint times and the athlete's inscriptions
+    # if such is necessary
     for dupRow in arrayAthletesWithSmallestIDs:
+        
+        # athlete's data that we will keep (at the moment we only save the name)
         athleteToKeep = dupRow[1]
         #print("Nome de atleta: " + str(athleteToKeep) + "\n")
 
@@ -94,15 +105,14 @@ def findAllDuplicateAthletes():
 
         smallestAthleteID = runSQLQuery(getSmallestAthleteID)
         print("ID mínimo do atleta " + str(athleteToKeep) + " é: " + str(smallestAthleteID[0][0]) + "\n")
-        #smallestAthleteID = np.array([4917])
 
         getAthleteIDsToDelete = ("SELECT athlete_id FROM athlete WHERE name = '%s' AND athlete_id NOT IN (%d)" % (athleteToKeep, smallestAthleteID[0][0]))
         athleteIDsToDelete = runSQLQuery(getAthleteIDsToDelete)
 
+        # this condition was made to avoid the UPDATE/DELETE query in
+        # case if there are not any duplicate athletes
         if not athleteIDsToDelete:
             continue
-
-        #athleteIDsToDelete = parseArrayToString(athleteIDsToDelete)
         
         updateDuplicateID(smallestAthleteID[0][0], athleteIDsToDelete)
 
