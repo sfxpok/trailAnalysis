@@ -4,4 +4,3 @@
 *.zip
 *.log
 *__pycache__
-databaseCredentials.py
