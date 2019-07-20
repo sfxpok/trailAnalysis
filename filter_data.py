@@ -204,6 +204,11 @@ def getFilter(filterArg, numberOfAthletes, athleteIDs, dfFiltered):
         secondQuartile = configFile.loc['secondQuartile', 'quartile-settings']
         thirdQuartile = configFile.loc['thirdQuartile', 'quartile-settings']
 
+        # used to subtract the final result because we don't want the time and date of the competition
+        # we want the time related to the duration of the competition
+        startCompetitionTime = dfFiltered.CPTime.min()
+        startCompetitionTime = pd.to_datetime(startCompetitionTime, format='%Y-%m-%d %H:%M:%S') # convert str to timestamp object
+
         # remove any records related to the starting point of the competition
         dfFiltered = clean_data.dropStartCPTimes(dfFiltered)
 
@@ -214,6 +219,9 @@ def getFilter(filterArg, numberOfAthletes, athleteIDs, dfFiltered):
         CPTimeDateTime = pd.to_datetime(dfFiltered['CPTime'])
 
         globalPerformanceQuartiles = CPTimeDateTime.quantile([float(firstQuartile), float(secondQuartile), float(thirdQuartile)])
+
+        globalPerformanceQuartiles = globalPerformanceQuartiles - startCompetitionTime
+
         print(globalPerformanceQuartiles)
 
         #plot.plotQuartiles(globalPerformanceQuartiles)
